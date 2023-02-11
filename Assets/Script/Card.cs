@@ -2,117 +2,120 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
-public class Card : MonoBehaviour
-{
-    public bool flipped = false;
-    public bool interactable = false;
-    public bool filled = false;
-    public bool rotating = false;
-
-    public bool seen = false;
-    public bool selected = false;
-
-    public bool seenLogged = false;
-    public bool selectLogged = false;
-
-    private Transform[] borders;
-
-    private ExperimentManager em;
-
-    private void Start()
+namespace SpatialMemoryTest {
+    public class Card : MonoBehaviour
     {
-        if (GameObject.Find("ExperimentManager") != null) {
-            em = GameObject.Find("ExperimentManager").GetComponent<ExperimentManager>();
-        }
-        borders = new Transform[4]{
-            transform.GetChild(0).GetChild(0).GetChild(2),
-            transform.GetChild(0).GetChild(0).GetChild(3),
-            transform.GetChild(0).GetChild(0).GetChild(4),
-            transform.GetChild(0).GetChild(0).GetChild(5)
-        };
+        [Header("Reference")]
+        [SerializeField]
+        private Transform border1;
+        [SerializeField]
+        private Transform border2;
+        [SerializeField]
+        private Transform border3;
+        [SerializeField]
+        private Transform border4;
 
-    }
+        [Header("Variable")]
+        public bool flipped = false;
+        public bool interactable = false;
+        public bool filled = false;
+        public bool rotating = false;
 
-    private void Update()
-    {
-        Color bothColor = new Color(27f / 255f, 158f / 255f, 119f / 255f);
-        Color seenColor = new Color(217f / 255f, 95f / 255f, 2f / 255f);
-        Color touchedColor = new Color(117f / 255f, 112f / 255f, 179f / 255f);
-        if (em == null)
+        public bool seen = false;
+        public bool seenLogged = false;
+        public bool selected = false;
+        public bool selectedLogged = false;
+
+        private ExperimentManager em;
+        private StartSceneScript ss;
+
+        private void Awake()
         {
-            if (filled && seen && !selected)
-            {
-                foreach (Transform t in borders)
-                {
-                    t.GetComponent<Image>().color = seenColor;
-                }
-            }
-            else if (filled && !seen && selected)
-            {
-                foreach (Transform t in borders)
-                {
-                    t.GetComponent<Image>().color = touchedColor;
-                }
-            }
-            else if (filled && seen && selected)
-            {
-                foreach (Transform t in borders)
-                {
-                    t.GetComponent<Image>().color = bothColor; 
-                }
-            }
         }
-        else
+
+        private void Update()
         {
-            if (em.gameState == GameState.ShowPattern || em.gameState == GameState.Distractor)
+            Transform[] borders = new Transform[4] { border1, border2, border3, border4 };
+
+            Color bothColor = new Color(27f / 255f, 158f / 255f, 119f / 255f);
+            Color seenColor = new Color(217f / 255f, 95f / 255f, 2f / 255f);
+            Color touchedColor = new Color(117f / 255f, 112f / 255f, 179f / 255f);
+
+            if (SceneManager.GetActiveScene().name == "StartScene")
             {
-                if (filled && seen && !selected)
-                {
-                    foreach (Transform t in borders)
-                    {
-                        t.GetComponent<Image>().color = seenColor;
-                    }
-                }
-                else if (filled && !seen && selected)
-                {
-                    foreach (Transform t in borders)
-                    {
-                        t.GetComponent<Image>().color = touchedColor;
-                    }
-                }
-                else if (filled && seen && selected)
-                {
-                    foreach (Transform t in borders)
-                    {
-                        t.GetComponent<Image>().color = bothColor;
-                    }
-                }
-                else if (filled && !seen && !selected)
-                {
-                    foreach (Transform t in borders)
-                    {
-                        t.GetComponent<Image>().color = Color.white;
-                    }
-                }
+                ss = GameObject.Find("MainExperimentManager").GetComponent<StartSceneScript>();
 
-
-
+                if (ss != null)
+                {
+                    if (ss.gameState == GameState.Learning)
+                    {
+                        if (filled && seen && !selected)
+                        {
+                            foreach (Transform t in borders)
+                                t.GetComponent<Image>().color = seenColor;
+                        }
+                        else if (filled && !seen && selected)
+                        {
+                            foreach (Transform t in borders)
+                                t.GetComponent<Image>().color = touchedColor;
+                        }
+                        else if (filled && seen && selected)
+                        {
+                            foreach (Transform t in borders)
+                                t.GetComponent<Image>().color = bothColor;
+                        }
+                    }
+                }
             }
             else
             {
-                foreach (Transform t in borders)
+                em = GameObject.Find("ExperimentManager").GetComponent<ExperimentManager>();
+                if (em.gameState == GameState.Learning || em.gameState == GameState.Distractor)
                 {
-                    t.GetComponent<Image>().color = Color.white;
+                    if (filled && seen && !selected)
+                    {
+                        foreach (Transform t in borders)
+                            t.GetComponent<Image>().color = seenColor;
+                    }
+                    else if (filled && !seen && selected)
+                    {
+                        foreach (Transform t in borders)
+                            t.GetComponent<Image>().color = touchedColor;
+                    }
+                    else if (filled && seen && selected)
+                    {
+                        foreach (Transform t in borders)
+                            t.GetComponent<Image>().color = bothColor;
+                    }
+                    else if (filled && !seen && !selected)
+                    {
+                        foreach (Transform t in borders)
+                            t.GetComponent<Image>().color = Color.white;
+                    }
+                }
+                else if (em.gameState == GameState.Result)
+                {
+                    if (selected)
+                    {
+                        foreach (Transform t in borders)
+                            t.GetComponent<Image>().color = seenColor;
+                    }
+                }
+                else {
+                    foreach (Transform t in borders)
+                        t.GetComponent<Image>().color = touchedColor;
                 }
             }
         }
-    }
 
-    public void ResetBorderColor() {
-        foreach (Transform t in borders)
-        {
-            t.GetComponent<Image>().color = Color.white;
+        public void ResetBorderColor() {
+            Transform[] borders = new Transform[4] { border1, border2, border3, border4 };
+            foreach (Transform t in borders)
+            {
+                t.GetComponent<Image>().color = Color.white;
+            }
         }
     }
 }

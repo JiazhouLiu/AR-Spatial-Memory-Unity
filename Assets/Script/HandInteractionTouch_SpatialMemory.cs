@@ -5,7 +5,7 @@ using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 
-namespace SpatialMemoryTest.Interaction
+namespace SpatialMemoryTest
 {
     [AddComponentMenu("Scripts/SpatialMemory/HandInteractionTouch")]
     public class HandInteractionTouch_SpatialMemory : MonoBehaviour, IMixedRealityTouchHandler
@@ -21,21 +21,8 @@ namespace SpatialMemoryTest.Interaction
         public TouchEvent OnTouchUpdated;
         #endregion
 
-        private Renderer TargetRenderer;
-        private Color originalColor;
-        private Color highlightedColor;
-
-        protected float duration = 1.5f;
-        protected float t = 0;
-
         private void Start()
         {
-            TargetRenderer = GetComponentInChildren<Renderer>();
-            if ((TargetRenderer != null) && (TargetRenderer.sharedMaterial != null))
-            {
-                originalColor = TargetRenderer.sharedMaterial.color;
-                highlightedColor = new Color(originalColor.r + 0.2f, originalColor.g + 0.2f, originalColor.b + 0.2f);
-            }
         }
 
         void IMixedRealityTouchHandler.OnTouchCompleted(HandTrackingInputEventData eventData)
@@ -45,11 +32,6 @@ namespace SpatialMemoryTest.Interaction
             if (debugMessage != null)
             {
                 debugMessage.text = "OnTouchCompleted: " + Time.unscaledTime.ToString();
-            }
-
-            if ((TargetRenderer != null) && (TargetRenderer.material != null))
-            {
-                TargetRenderer.material.color = originalColor;
             }
         }
 
@@ -61,11 +43,6 @@ namespace SpatialMemoryTest.Interaction
             {
                 debugMessage.text = "OnTouchStarted: " + Time.unscaledTime.ToString();
             }
-
-            if (TargetRenderer != null)
-            {
-                TargetRenderer.sharedMaterial.color = Color.Lerp(originalColor, highlightedColor, 2.0f);
-            }
         }
 
         void IMixedRealityTouchHandler.OnTouchUpdated(HandTrackingInputEventData eventData)
@@ -75,12 +52,6 @@ namespace SpatialMemoryTest.Interaction
             if (debugMessage2 != null)
             {
                 debugMessage2.text = "OnTouchUpdated: " + Time.unscaledTime.ToString();
-            }
-
-            if ((TargetRenderer != null) && (TargetRenderer.material != null))
-            {
-                TargetRenderer.material.color = Color.Lerp(Color.green, Color.red, t);
-                t = Mathf.PingPong(Time.time, duration) / duration;
             }
         }
     }

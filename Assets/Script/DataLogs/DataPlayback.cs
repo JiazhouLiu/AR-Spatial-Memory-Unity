@@ -28,9 +28,6 @@ public class DataPlayback : MonoBehaviour
     private bool isLiveReplayPaused = false;
     private float prevTimeScrubber;
 
-    private OneEuroFilter<Vector3> cameraTransformPositionFilter;
-    private OneEuroFilter<Quaternion> cameraTransformRotationFilter;
-
     private int prevQuestionID = 0;
     [HideInInspector]
     public int currentQuestionID = 0;
@@ -74,9 +71,6 @@ public class DataPlayback : MonoBehaviour
             cardsData.Add(cardsDataLines[i].Split('\t'));
 
         float totalTime = float.Parse(headTransformData[headTransformData.Count - 1][0]);
-
-        cameraTransformPositionFilter = new OneEuroFilter<Vector3>(10);
-        cameraTransformRotationFilter = new OneEuroFilter<Quaternion>(10);
 
         int cardsLineIndex = 1;
 

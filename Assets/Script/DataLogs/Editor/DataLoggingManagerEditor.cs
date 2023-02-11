@@ -3,31 +3,34 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(DataLoggingManager))]
-public class DataLoggingManagerEditor : Editor
+namespace SpatialMemoryTest
 {
-    public override void OnInspectorGUI()
+#if UNITY_EDITOR
+    [CustomEditor(typeof(DataLoggingManager))]
+    public class DataLoggingManagerEditor : Editor
     {
-        DrawDefaultInspector();
-
-        DataLoggingManager dataLogger = (DataLoggingManager) target;
-
-        if (!dataLogger.IsLogging)
+        public override void OnInspectorGUI()
         {
-            if (GUILayout.Button("Start Logging"))
+            DrawDefaultInspector();
+
+            DataLoggingManager dataLogger = (DataLoggingManager)target;
+
+            if (!dataLogger.IsLogging)
             {
-                dataLogger.StartLogging();
+                if (GUILayout.Button("Start Logging"))
+                {
+                    dataLogger.StartLogging();
+                }
             }
-        }
-        else
-        {
-            EditorGUILayout.HelpBox("CURRENTLY LOGGING GROUP " + dataLogger.ParticipantID + "!", MessageType.Info);
-            if (GUILayout.Button("Stop Logging"))
+            else
             {
-                dataLogger.StopLogging();
+                EditorGUILayout.HelpBox("CURRENTLY LOGGING GROUP " + dataLogger.ParticipantID + "!", MessageType.Info);
+                if (GUILayout.Button("Stop Logging"))
+                {
+                    dataLogger.StopLogging();
+                }
             }
         }
     }
-}
 #endif
+}

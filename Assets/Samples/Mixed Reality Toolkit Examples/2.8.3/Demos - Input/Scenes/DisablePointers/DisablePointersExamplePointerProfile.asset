@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DisablePointersExamplePointerProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 1
-  pointingExtent: 0.5
+  pointingExtent: 1
   pointingRaycastLayerMasks:
   - serializedVersion: 2
     m_Bits: 4294967291
@@ -28,7 +28,7 @@ MonoBehaviour:
   gazeProviderType:
     reference: Microsoft.MixedReality.Toolkit.Input.GazeProvider, Microsoft.MixedReality.Toolkit.Services.InputSystem
   useHeadGazeOverride: 0
-  isEyeTrackingEnabled: 0
+  isEyeTrackingEnabled: 1
   pointerOptions: []
   pointerMediator:
     reference: Microsoft.MixedReality.Toolkit.Input.DefaultPointerMediator, Microsoft.MixedReality.Toolkit.SDK

@@ -303,7 +303,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ac058bb07732cc0489076338ded7cb3b, type: 2}
+  - {fileID: 2100000, guid: 0725b8e6f18571e4eb70bf0ded8c6cec, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -587,7 +587,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5727101587611926128}
-  - component: {fileID: 591664202}
+  - component: {fileID: 7350323573106916367}
   - component: {fileID: 2574451906687309937}
   - component: {fileID: 5693837804233154282}
   - component: {fileID: 1084193479094524688}
@@ -616,7 +616,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!114 &591664202
+--- !u!114 &7350323573106916367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -625,9 +625,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5727101587611926129}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be9e8654348d5104389ca7e2e75b1019, type: 3}
+  m_Script: {fileID: 11500000, guid: 069431e965c22c642b1036bd581e7bcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  border1: {fileID: 3330649311698107961}
+  border2: {fileID: 5339437411948099127}
+  border3: {fileID: 8647863020210738470}
+  border4: {fileID: 8637219355766748070}
   flipped: 0
   interactable: 0
   filled: 0
@@ -696,9 +700,21 @@ MonoBehaviour:
         m_CallState: 2
   OnTouchUpdated:
     m_PersistentCalls:
-      m_Calls: []
-  targetObjectTransform: {fileID: 0}
-  rotateSpeed: 300
+      m_Calls:
+      - m_Target: {fileID: 5727101587611926129}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  targetObjectTransform: {fileID: 5727101587611926128}
+  card: {fileID: 7350323573106916367}
 --- !u!82 &5984089691266866053
 AudioSource:
   m_ObjectHideFlags: 0
@@ -856,7 +872,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 566dcdd115937244fb08344d275b2c49, type: 2}
+  - {fileID: 2100000, guid: a952cedf7e10634488596098373dda17, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -904,7 +920,7 @@ GameObject:
   - component: {fileID: 2217093896230035860}
   - component: {fileID: 402750469619675674}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -979,7 +995,7 @@ GameObject:
   - component: {fileID: 6112325829372172412}
   - component: {fileID: 640486816097018404}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1054,7 +1070,7 @@ GameObject:
   - component: {fileID: 912531558959491303}
   - component: {fileID: 5976918459609473085}
   m_Layer: 5
-  m_Name: Image
+  m_Name: border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1129,7 +1145,7 @@ GameObject:
   - component: {fileID: 3641510733539611579}
   - component: {fileID: 8614913608263871424}
   m_Layer: 5
-  m_Name: Image (1)
+  m_Name: border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
