@@ -637,7 +637,9 @@ MonoBehaviour:
   filled: 0
   rotating: 0
   seen: 0
+  seenLogged: 0
   selected: 0
+  selectedLogged: 0
 --- !u!65 &2574451906687309937
 BoxCollider:
   m_ObjectHideFlags: 0

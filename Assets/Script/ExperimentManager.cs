@@ -155,6 +155,10 @@ namespace SpatialMemoryTest
                 RecallPhaseCheck();
 
             WritingToLog();
+
+            // testing
+            if (Input.GetKeyDown("n"))
+                NextGameState();
         }
 
         #region Prepare phase
@@ -517,7 +521,7 @@ namespace SpatialMemoryTest
                 if (localEachDistractorReactTime <= 0)
                 {
                     DistractorTaskInstruction.color = Color.red;
-                    localDistractorTime += 4;
+                    localDistractorTime += eachDistractorReactTime;
                     localEachDistractorReactTime = eachDistractorReactTime;
 
                     GetNewDistractorTask();
@@ -533,7 +537,7 @@ namespace SpatialMemoryTest
                         {
                             if (card.name != currentGameNumber.ToString())
                             {
-                                localDistractorTime += 4;
+                                localDistractorTime += eachDistractorReactTime;
                                 // play sound or show text
                                 DistractorTaskInstruction.color = Color.red;
                             }
@@ -557,6 +561,7 @@ namespace SpatialMemoryTest
         private void InitiateRecallPhase() {
             WriteInteractionToLog("Recall Phase");
             gameState = GameState.Recall;
+
 
             // show patternCards
             foreach (GameObject card in patternCards)
@@ -857,6 +862,23 @@ namespace SpatialMemoryTest
                 t.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
             else
                 t.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+        }
+
+        private void NextGameState() {
+            if (gameState == GameState.Prepare)
+                InitiateLearningPhase();
+            else if (gameState == GameState.Learning)
+                InitiateDistractorPhase();
+            else if (gameState == GameState.Distractor) {
+                HideDistractorCards();
+                InitiateRecallPhase();
+            }
+            else if (gameState == GameState.Recall)
+                InitiateResultPhase();
+            else if (gameState == GameState.Result)
+                InitiateBreakPhase();
+            else if (gameState == GameState.Break)
+                PrepareExperiment();
         }
         #endregion
 
