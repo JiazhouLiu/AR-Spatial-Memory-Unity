@@ -23,6 +23,22 @@ namespace SpatialMemoryTest
         private ExperimentManager em;
         private StartSceneScript ss;
 
+        void IMixedRealityTouchHandler.OnTouchCompleted(HandTrackingInputEventData eventData)
+        {
+            if (SceneManager.GetActiveScene().name == "Experiment")
+            {
+                em = GameObject.Find("ExperimentManager").GetComponent<ExperimentManager>();
+                if (em != null)
+                {
+                    if (em.gameState == GameState.Distractor)
+                    {
+                        em.RecordTouchingCard(gameObject);
+                        //em.RemoveTouchingCardFromList(gameObject);
+                    }
+                }
+            }
+        }
+
         void IMixedRealityTouchHandler.OnTouchUpdated(HandTrackingInputEventData eventData)
         {
             if (SceneManager.GetActiveScene().name == "StartScene")
@@ -36,7 +52,8 @@ namespace SpatialMemoryTest
                     }
                     else if (ss.gameState == GameState.Distractor)
                     {
-                        card.selected = true;
+                        //card.selected = true;
+                        //em.RecordTouchingCards(gameObject);
                     }
                     else if (ss.gameState == GameState.Recall)
                     {

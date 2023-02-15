@@ -61,6 +61,9 @@ namespace SpatialMemoryTest
         private List<GameObject> patternCards;
         private List<GameObject> distractorCards;
         private List<GameObject> userSelectedPatternCards;
+        private List<GameObject> touchingCards;
+        private GameObject touchingCard;
+        private bool finishTouching = false;
         private float LocalMemoryTime;
         private float localDistractorTime;
         private float localEachDistractorReactTime;
@@ -95,6 +98,7 @@ namespace SpatialMemoryTest
             patternCards = new List<GameObject>();
             userSelectedPatternCards = new List<GameObject>();
             distractorCards = new List<GameObject>();
+            touchingCards = new List<GameObject>();
 
             // initialise task list
             FlatTaskList = new List<string>();
@@ -531,23 +535,38 @@ namespace SpatialMemoryTest
 
                     Instruction.text = "Select the number below!\nTimes remaining: " + localDistractorTime.ToString("0.0");
 
-                    foreach (GameObject card in distractorCards)
-                    {
-                        if (card.GetComponent<Card>().selected)
+                    if (finishTouching) {
+                        finishTouching = false;
+
+                        if (touchingCard.name != currentGameNumber.ToString())
                         {
-                            if (card.name != currentGameNumber.ToString())
-                            {
-                                localDistractorTime += eachDistractorReactTime;
-                                // play sound or show text
-                                DistractorTaskInstruction.color = Color.red;
-                            }
-                            else
-                            {
-                                DistractorTaskInstruction.color = Color.white;
-                                GetNewDistractorTask();
-                            }
+                            localDistractorTime += eachDistractorReactTime;
+                            // play sound or show text
+                            DistractorTaskInstruction.color = Color.red;
+                        }
+                        else
+                        {
+                            DistractorTaskInstruction.color = Color.white;
+                            GetNewDistractorTask();
                         }
                     }
+                    //foreach (GameObject card in distractorCards)
+                    //{
+                    //    if (card.GetComponent<Card>().selected)
+                    //    {
+                    //        if (card.name != currentGameNumber.ToString())
+                    //        {
+                    //            localDistractorTime += eachDistractorReactTime;
+                    //            // play sound or show text
+                    //            DistractorTaskInstruction.color = Color.red;
+                    //        }
+                    //        else
+                    //        {
+                    //            DistractorTaskInstruction.color = Color.white;
+                    //            GetNewDistractorTask();
+                    //        }
+                    //    }
+                    //}
                 }
             }
             else {
@@ -879,6 +898,23 @@ namespace SpatialMemoryTest
                 InitiateBreakPhase();
             else if (gameState == GameState.Break)
                 PrepareExperiment();
+        }
+
+        public void RecordTouchingCards(GameObject card) {
+            if (!touchingCards.Contains(card))
+                touchingCards.Add(card);
+        }
+
+        public void RemoveTouchingCardFromList(GameObject card) {
+            if (touchingCards.Contains(card))
+                touchingCards.Remove(card);
+            else
+                Debug.Log("removing touching card wrong! " + card.name);
+        }
+
+        public void RecordTouchingCard(GameObject card) {
+            finishTouching = true;
+            touchingCard = card;
         }
         #endregion
 
