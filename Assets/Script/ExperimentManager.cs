@@ -317,11 +317,11 @@ namespace SpatialMemoryTest
             {
                 case Layout.Flat:
                     transform.localPosition = new Vector3(0, adjustedHeight, -1);
-                    GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
+                    //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
                     break;
                 case Layout.Wraparound:
                     transform.localPosition = new Vector3(0, adjustedHeight, 0);
-                    GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
+                    //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
                     break;
                 default:
                     break;
@@ -481,7 +481,9 @@ namespace SpatialMemoryTest
                 if (IsCardFilled(card))
                 {
                     SetCardsColor(card.transform, Color.black);
+                    card.transform.localEulerAngles = Vector3.zero;
                     card.GetComponent<Card>().selected = false;
+                    card.GetComponent<Card>().rotating = false;
                     card.GetComponent<Card>().seen = false;
                     card.GetComponent<Card>().ResetBorderColor();
                 }
@@ -550,23 +552,6 @@ namespace SpatialMemoryTest
                             GetNewDistractorTask();
                         }
                     }
-                    //foreach (GameObject card in distractorCards)
-                    //{
-                    //    if (card.GetComponent<Card>().selected)
-                    //    {
-                    //        if (card.name != currentGameNumber.ToString())
-                    //        {
-                    //            localDistractorTime += eachDistractorReactTime;
-                    //            // play sound or show text
-                    //            DistractorTaskInstruction.color = Color.red;
-                    //        }
-                    //        else
-                    //        {
-                    //            DistractorTaskInstruction.color = Color.white;
-                    //            GetNewDistractorTask();
-                    //        }
-                    //    }
-                    //}
                 }
             }
             else {
