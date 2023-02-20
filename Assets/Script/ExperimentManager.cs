@@ -9,6 +9,8 @@ namespace SpatialMemoryTest
 {
     public class ExperimentManager : MonoBehaviour
     {
+        public static int trialNo;
+
         [Header("Resource")]
         public GameObject CardPrefab;
         public AudioClip TimesUp;
@@ -49,7 +51,6 @@ namespace SpatialMemoryTest
         private float adjustedHeight = 0;
         private int difficultyLevel = 5;
         private int maxTrialNo = 24;
-        private int trialNo = 1;
         #endregion
 
         #region String variables
@@ -129,6 +130,8 @@ namespace SpatialMemoryTest
                 // setup trail Number
                 if (StartSceneScript.PublicTrialNumber != 0)
                     trialNo = StartSceneScript.PublicTrialNumber;
+                else
+                    trialNo = 1;
 
                 // setup writer stream
                 SetupLoggingSystem();
@@ -185,10 +188,9 @@ namespace SpatialMemoryTest
                 WriteInteractionToLog("Prepare Phase");
 
                 if (GetTrialID() == "Training")
-                    Instruction.text = "Training Task. Press the Start button when you are ready.";
+                    Instruction.text = "Training Task.\n\n Press the Start button when you are ready.";
                 else
-                    Instruction.text = "Experiment Task: " + GetTrialID() + " / 16. Press the Start button when you are ready.";
-
+                    Instruction.text = "Experiment Task: " + GetTrialID() + " / 16.\n\n Press the Start button when you are ready.";
 
                 if (patternCards != null)
                 {
@@ -549,6 +551,7 @@ namespace SpatialMemoryTest
                         else
                         {
                             DistractorTaskInstruction.color = Color.white;
+                            localEachDistractorReactTime = eachDistractorReactTime;
                             GetNewDistractorTask();
                         }
                     }
@@ -589,7 +592,7 @@ namespace SpatialMemoryTest
         private void RecallPhaseCheck()
         {
             if (userSelectedPatternCards.Count == 0 || userSelectedPatternCards.Count == 1)
-                Instruction.text = "You have selected " + userSelectedPatternCards.Count + " card out of " + difficultyLevel + "cards.";
+                Instruction.text = "You have selected " + userSelectedPatternCards.Count + " card out of " + difficultyLevel + " cards.";
             else if (userSelectedPatternCards.Count == difficultyLevel)
             {
                 resultButton.SetActive(true);
@@ -753,7 +756,7 @@ namespace SpatialMemoryTest
 
         private void WriteAnswerToLog()
         {
-            if (writerAnswer != null)
+            if (writerAnswer != null && userSelectedPatternCards.Count != 0)
             {
                 writerAnswer.WriteLine(StartSceneScript.ParticipantID + "," + GetTrialNumber() + "," + GetTrialID() + "," + GetLayout() + "," +
                     GetDifficulty() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
@@ -785,7 +788,7 @@ namespace SpatialMemoryTest
 
         private void WriteCardsLog()
         {
-            if (writerTrialCards != null)
+            if (writerTrialCards != null && userSelectedPatternCards.Count != 0)
             {
                 string final = "";
 
@@ -1026,10 +1029,12 @@ namespace SpatialMemoryTest
 
         private string GetTrialID()
         {
-            if (trialNo == 1 || trialNo == 2)
+            if ((trialNo - 1) % 6 == 0)
                 return "Training";
-            else
-                return (trialNo - 2) + "";
+            else { 
+                int tmp = (trialNo - 1) / 6;
+                return (trialNo - 1 - tmp) + "";
+            } 
         }
 
         private string GetGameState()

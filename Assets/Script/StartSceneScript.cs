@@ -90,11 +90,6 @@ namespace SpatialMemoryTest
         {
             if (SceneManager.GetActiveScene().name == "StartScene") // training scene
             {
-                if (userSelectedPatternCards.Count > 0) { 
-                    foreach(GameObject go in userSelectedPatternCards)
-                        Debug.Log(go.name);
-                }
-
                 if(gameState == GameState.Learning)
                     CheckFilledScanned();
 
@@ -118,9 +113,8 @@ namespace SpatialMemoryTest
                     // flip cards to their back
                     foreach (GameObject card in cardLists)
                     {
-                        if (IsCardFilled(card))
-                            SetCardsColor(card.transform, Color.black);
-                        card.transform.localEulerAngles = new Vector3(0, 180, 0);
+                        SetCardsColor(card.transform, Color.black);
+                        card.transform.localEulerAngles = Vector3.zero;
                     }
                     backActivated = false;
                 }
@@ -179,7 +173,8 @@ namespace SpatialMemoryTest
 
                 if (recallActivated)
                 {
-                    instruction.text = "This is the recall phase. You need to select (touch the card) 5 cards as you remembered. There is no time limit for this phase." +
+                    instruction.text = "This is the recall phase. You need to select (touch the card) 5 cards as you remembered. " +
+                        "There is no time limit for this phase." +
                         "You cannot undo what you’ve selected.";
 
                     if (!firstTimeSetup)
@@ -197,7 +192,7 @@ namespace SpatialMemoryTest
                 {
                     CheckResult();
 
-                    instruction.text = "This is the result phase. You will see the following message during the experiment.\n\n" +
+                    instruction.text = "This is the result phase. You will see the correct answers and the following message during the experiment.\n\n" +
                         "Result: " + accurateNumber + " / " + 2;
 
                     // show correct cards and selected cards
