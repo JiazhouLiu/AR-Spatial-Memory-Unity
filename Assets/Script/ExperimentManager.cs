@@ -315,19 +315,25 @@ namespace SpatialMemoryTest
 
             DistractorTask.localPosition = new Vector3(0, adjustedHeight, 0);
 
-            switch (localLayout)
-            {
-                case Layout.Flat:
-                    transform.localPosition = new Vector3(0, adjustedHeight, -1);
-                    //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
-                    break;
-                case Layout.Wraparound:
-                    transform.localPosition = new Vector3(0, adjustedHeight, 0);
-                    //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
-                    break;
-                default:
-                    break;
-            }
+            transform.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0.5f + Vector3.down * 0.5f;
+
+            transform.LookAt(Camera.main.transform.position);
+            transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
+            //switch (localLayout)
+            //{
+
+            //    case Layout.Flat:
+                    
+            //        //transform.localPosition = new Vector3(0, adjustedHeight, -1);
+            //        //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
+            //        break;
+            //    case Layout.Wraparound:
+            //        //transform.localPosition = new Vector3(0, adjustedHeight, 0);
+            //        //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
+            //        break;
+            //    default:
+            //        break;
+            //}
         }
 
         // Set Card Position

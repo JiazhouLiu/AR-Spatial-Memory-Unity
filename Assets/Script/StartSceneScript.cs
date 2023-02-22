@@ -34,6 +34,7 @@ namespace SpatialMemoryTest
         private bool exploreActivated = false;
         private bool learningActivated = false;
         private bool distractorActivated = false;
+        private bool distractor2Activated = false;
         private bool recallActivated = false;
         private bool resultActivated = false;
         private bool nextActivated = false;
@@ -132,7 +133,7 @@ namespace SpatialMemoryTest
                 if (learningActivated)
                 {
                     instruction.text = "This is the learning phase. There are five white cards out of 36 cards. " +
-                        "You need to remember the position for all the white cards.";
+                        "You need to remember the position for all the white cards in 15 seconds.";
                     gameState = GameState.Learning;
 
                     if (!firstTimeSetup)
@@ -164,17 +165,26 @@ namespace SpatialMemoryTest
                     }
                     SetupTaskPositionRotation(DistractorTask);
 
-                    instruction.text = "This is the distractor phase. You will play a number touching game in 15 seconds." +
-                        "Penalties will be adding 3 more seconds if you touched the wrong card or no interaction for more than 3 seconds.";
+                    instruction.text = "This is the distractor phase. You will play a number touching game in 15 seconds. There will be multiple tasks for you in this phase\n" +
+                        "Press the Show Task button to see the task number.";
                     gameState = GameState.Distractor;
 
                     distractorActivated = false;
                 }
 
+                if (distractor2Activated) {
+                    instruction.text = "Now you see a number, and you need to touch the same number in front of you in 5 seconds. " +
+                        "In the real experiment, the number will directly show up on this board. " +
+                        "Penalties will be given if no reaction or inaccurate touch.";
+
+                    distractor2Activated = false;
+                }
+
+
                 if (recallActivated)
                 {
                     instruction.text = "This is the recall phase. You need to select (touch the card) 5 cards as you remembered. " +
-                        "There is no time limit for this phase." +
+                        "There is no time limit for this phase. " +
                         "You cannot undo what you’ve selected.";
 
                     if (!firstTimeSetup)
@@ -427,6 +437,11 @@ namespace SpatialMemoryTest
         public void DistractorButtonPressed()
         {
             distractorActivated = true;
+        }
+
+        public void Distractor2ButtonPressed()
+        {
+            distractor2Activated = true;
         }
 
         public void RecallButtonPressed()

@@ -39,9 +39,9 @@ namespace SpatialMemoryTest {
         {
             Transform[] borders = new Transform[4] { border1, border2, border3, border4 };
 
-            Color bothColor = new Color(27f / 255f, 158f / 255f, 119f / 255f);
-            Color seenColor = new Color(217f / 255f, 95f / 255f, 2f / 255f);
-            Color touchedColor = new Color(117f / 255f, 112f / 255f, 179f / 255f);
+            Color bothColor = new Color(27f / 255f, 158f / 255f, 119f / 255f); // green 
+            Color seenColor = new Color(217f / 255f, 95f / 255f, 2f / 255f); // orange
+            Color touchedColor = new Color(117f / 255f, 112f / 255f, 179f / 255f); // blue
 
             if (SceneManager.GetActiveScene().name == "StartScene")
             {
@@ -65,6 +65,17 @@ namespace SpatialMemoryTest {
                         {
                             foreach (Transform t in borders)
                                 t.GetComponent<Image>().color = bothColor;
+                        }
+                    }
+                    else if (ss.gameState == GameState.Distractor) {
+                        if (filled && selected)
+                        {
+                            foreach (Transform t in borders)
+                                t.GetComponent<Image>().color = Color.green;
+                        }
+                        else if (!filled && selected) {
+                            foreach (Transform t in borders)
+                                t.GetComponent<Image>().color = Color.red;
                         }
                     }
                 }

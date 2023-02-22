@@ -33,7 +33,6 @@ namespace SpatialMemoryTest
                     if (em.gameState == GameState.Distractor)
                     {
                         em.RecordTouchingCard(gameObject);
-                        //em.RemoveTouchingCardFromList(gameObject);
                     }
                 }
             }
@@ -52,8 +51,7 @@ namespace SpatialMemoryTest
                     }
                     else if (ss.gameState == GameState.Distractor)
                     {
-                        //card.selected = true;
-                        //em.RecordTouchingCards(gameObject);
+                        card.selected = true;
                     }
                     else if (ss.gameState == GameState.Recall)
                     {
