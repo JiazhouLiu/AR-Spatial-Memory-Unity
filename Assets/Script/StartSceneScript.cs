@@ -111,6 +111,10 @@ namespace SpatialMemoryTest
                         if(go.activeSelf)
                             go.GetComponent<Card>().ResetBorderColor();
                     }
+
+                    foreach (Transform t in DistractorTask)
+                        t.GetComponent<Card>().ResetBorderColor();
+
                     // flip cards to their back
                     foreach (GameObject card in cardLists)
                     {

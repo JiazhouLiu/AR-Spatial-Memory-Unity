@@ -1,0 +1,2 @@
+https://codeholo.com/2021/03/27/qrcode-tracking-with-hololens-2-xr-sdk-and-mrtk-v2-5/
+https://github.com/microsoft/MixedReality-QRCode-Sample

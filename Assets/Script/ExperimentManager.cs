@@ -312,28 +312,31 @@ namespace SpatialMemoryTest
                     }
                 }
             }
+            
+            switch (localLayout)
+            {
+                case Layout.Flat:
+                    transform.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
+                    transform.LookAt(Camera.main.transform.position);
+                    transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-            DistractorTask.localPosition = new Vector3(0, adjustedHeight, 0);
+                    //DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
+                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    DistractorTask.LookAt(Camera.main.transform.position);
+                    DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
+                    break;
+                case Layout.Wraparound:
+                    transform.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    transform.LookAt(Camera.main.transform.position);
+                    transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-            transform.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0.5f + Vector3.down * 0.5f;
-
-            transform.LookAt(Camera.main.transform.position);
-            transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
-            //switch (localLayout)
-            //{
-
-            //    case Layout.Flat:
-                    
-            //        //transform.localPosition = new Vector3(0, adjustedHeight, -1);
-            //        //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
-            //        break;
-            //    case Layout.Wraparound:
-            //        //transform.localPosition = new Vector3(0, adjustedHeight, 0);
-            //        //GameObject.Find("PreferableStand").transform.localPosition = new Vector3(0, 0.01f, 0);
-            //        break;
-            //    default:
-            //        break;
-            //}
+                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    DistractorTask.LookAt(Camera.main.transform.position);
+                    DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
+                    break;
+                default:
+                    break;
+            }
         }
 
         // Set Card Position
@@ -348,7 +351,7 @@ namespace SpatialMemoryTest
                 case Layout.Flat:
                     xValue = (index - (row * numberOfColumns) - (numberOfColumns / 2.0f - 0.5f)) * hDelta;
                     yValue = (numberOfRows - (row + 1)) * vDelta;
-                    zValue = 2;
+                    zValue = 0;
                     break;
                 case Layout.Wraparound:
                     xValue = -Mathf.Cos((index - (row * numberOfColumns)) * Mathf.PI / (numberOfColumns / 2.0f)) * ((numberOfColumns - 1) * hDelta / (2.0f * Mathf.PI));
@@ -476,6 +479,8 @@ namespace SpatialMemoryTest
 
             gameState = GameState.Distractor;
             WriteInteractionToLog("Distractor");
+
+            GetNewDistractorTask();
         }
         #endregion
 
@@ -551,10 +556,11 @@ namespace SpatialMemoryTest
                         if (touchingCard.name != currentGameNumber.ToString())
                         {
                             localDistractorTime += eachDistractorReactTime;
+                            GetNewDistractorTask();
                             // play sound or show text
-                            DistractorTaskInstruction.color = Color.red;
+                            Instruction.color = Color.red;
                         }
-                        else
+                        else if(touchingCard.name == currentGameNumber.ToString())
                         {
                             DistractorTaskInstruction.color = Color.white;
                             localEachDistractorReactTime = eachDistractorReactTime;

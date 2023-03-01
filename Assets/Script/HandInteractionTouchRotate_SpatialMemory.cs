@@ -33,6 +33,7 @@ namespace SpatialMemoryTest
                     if (em.gameState == GameState.Distractor)
                     {
                         em.RecordTouchingCard(gameObject);
+                        Debug.Log("Touch Complete");
                     }
                 }
             }
@@ -40,9 +41,12 @@ namespace SpatialMemoryTest
 
         void IMixedRealityTouchHandler.OnTouchUpdated(HandTrackingInputEventData eventData)
         {
+            
             if (SceneManager.GetActiveScene().name == "StartScene")
             {
                 ss = GameObject.Find("MainExperimentManager").GetComponent<StartSceneScript>();
+
+                Debug.Log("Game State: " + ss.gameState.ToString());
                 if (ss != null) {
                     if (ss.gameState == GameState.Learning)
                     {
@@ -62,11 +66,6 @@ namespace SpatialMemoryTest
                             StartCoroutine(Rotate(targetObjectTransform, new Vector3(0, 180, 0), 0.5f));
                         }
                     }
-                }
-                if (!card.rotating && card.filled)
-                {
-                    card.rotating = true;
-                    StartCoroutine(Rotate(targetObjectTransform, new Vector3(0, 180, 0), 0.5f));
                 }
             }
             else {

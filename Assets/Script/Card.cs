@@ -41,7 +41,7 @@ namespace SpatialMemoryTest {
 
             Color bothColor = new Color(27f / 255f, 158f / 255f, 119f / 255f); // green 
             Color seenColor = new Color(217f / 255f, 95f / 255f, 2f / 255f); // orange
-            Color touchedColor = new Color(117f / 255f, 112f / 255f, 179f / 255f); // blue
+            Color touchedColor = new Color(117f / 255f, 112f / 255f, 179f / 255f); // purple
 
             if (SceneManager.GetActiveScene().name == "StartScene")
             {
@@ -108,16 +108,25 @@ namespace SpatialMemoryTest {
                 }
                 else if (em.gameState == GameState.Result)
                 {
-                    if (selected)
+                    if (selected && filled)
+                    {
+                        foreach (Transform t in borders)
+                            t.GetComponent<Image>().color = Color.green;
+                    }
+                    else if (!selected && filled)
                     {
                         foreach (Transform t in borders)
                             t.GetComponent<Image>().color = seenColor;
                     }
+                    else if (selected && !filled) {
+                        foreach (Transform t in borders)
+                            t.GetComponent<Image>().color = Color.red;
+                    }
                 }
-                else {
-                    foreach (Transform t in borders)
-                        t.GetComponent<Image>().color = touchedColor;
-                }
+                //else {
+                //    foreach (Transform t in borders)
+                //        t.GetComponent<Image>().color = touchedColor;
+                //}
             }
         }
 
