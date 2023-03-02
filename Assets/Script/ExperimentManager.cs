@@ -75,6 +75,7 @@ namespace SpatialMemoryTest
         private bool allSeen = false;        
         private bool allSelected = false;
         private bool learningTimesUp = false;
+        private bool gridCalibrate = false;
         #endregion
 
         #region Log use variables
@@ -152,8 +153,15 @@ namespace SpatialMemoryTest
         // Update is called once per frame
         private void Update()
         {
-            if (gameState == GameState.Learning)
+
+            if (gameState == GameState.Learning) {
+                if (!gridCalibrate) {
+                    gridCalibrate = true;
+                    SetGridPosition(layout);
+                }
                 LearningPhaseCheck();
+            }
+
 
             if (gameState == GameState.Distractor)
                 DistractorPhaseCheck();
@@ -312,7 +320,9 @@ namespace SpatialMemoryTest
                     }
                 }
             }
-            
+        }
+
+        private void SetGridPosition(Layout localLayout) {
             switch (localLayout)
             {
                 case Layout.Flat:
@@ -320,8 +330,8 @@ namespace SpatialMemoryTest
                     transform.LookAt(Camera.main.transform.position);
                     transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-                    //DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
                     DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    //DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
                     DistractorTask.LookAt(Camera.main.transform.position);
                     DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
                     break;
@@ -379,7 +389,8 @@ namespace SpatialMemoryTest
             {
                 card.SetActive(true);
                 if (IsCardFilled(card))
-                    card.GetComponent<HandInteractionTouchRotate_SpatialMemory>().SelfRotate();
+                    SetCardsColor(card.transform, Color.white);
+                //card.GetComponent<HandInteractionTouchRotate_SpatialMemory>().SelfRotate();
             }
 
             gameState = GameState.Learning;
@@ -406,7 +417,6 @@ namespace SpatialMemoryTest
         private void CheckCardsScanned()
         {
             allSeen = true;
-
             foreach (GameObject go in patternCards)
             {
                 if (IsCardFilled(go))
@@ -530,6 +540,7 @@ namespace SpatialMemoryTest
             foreach (GameObject card in distractorCards)
                 card.GetComponent<Card>().selected = false; // clear card property
             DistractorTaskInstruction.text = ""; // clear instruction text
+            DistractorTaskInstruction.color = Color.white;
             DistractorTask.gameObject.SetActive(false); // hide distractor task
         }
 
@@ -562,6 +573,7 @@ namespace SpatialMemoryTest
                         }
                         else if(touchingCard.name == currentGameNumber.ToString())
                         {
+                            Instruction.color = Color.white;
                             DistractorTaskInstruction.color = Color.white;
                             localEachDistractorReactTime = eachDistractorReactTime;
                             GetNewDistractorTask();
@@ -642,9 +654,13 @@ namespace SpatialMemoryTest
             foreach (GameObject card in patternCards) 
             {
                 SetCardsColor(card.transform, Color.black);
+                card.transform.localEulerAngles = Vector3.zero;
+
+                if(IsCardSelected(card))
+                    SetCardsColor(card.transform, Color.white);
 
                 if (IsCardFilled(card))
-                    SetCardsColor(card.transform, Color.white);                    
+                    SetCardsColor(card.transform, Color.white);
             }
 
             // increase trial No
@@ -656,6 +672,7 @@ namespace SpatialMemoryTest
                 WriteAnswerToLog();
             }
             trialNo++;
+            gridCalibrate = false;
 
             if (trialNo > maxTrialNo)
                 CloseAllWritersAndQuit();

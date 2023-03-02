@@ -494,7 +494,7 @@ GameObject:
   - component: {fileID: 5727101587611926128}
   - component: {fileID: 7350323573106916367}
   - component: {fileID: 2574451906687309937}
-  - component: {fileID: 5693837804233154282}
+  - component: {fileID: 1516131450850015749}
   - component: {fileID: 1084193479094524688}
   - component: {fileID: 5984089691266866053}
   m_Layer: 0
@@ -557,7 +557,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.05, y: 1.05, z: 0.02}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5693837804233154282
+--- !u!114 &1516131450850015749
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -566,11 +566,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 5727101587611926129}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 183e8dd8b58276c4a8f2b807059981b8, type: 3}
+  m_Script: {fileID: 11500000, guid: 98c748f3768ab714a8449b60fb9edc5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   eventsToReceive: 0
-  debounceThreshold: 0.01
+  debounceThreshold: 0.1
+  localForward: {x: -0, y: -0, z: -1}
+  localUp: {x: 0, y: 1, z: 0}
+  localCenter: {x: 0, y: 0, z: -0.01}
+  bounds: {x: 1.05, y: 1.05}
   touchableCollider: {fileID: 2574451906687309937}
 --- !u!114 &1084193479094524688
 MonoBehaviour:

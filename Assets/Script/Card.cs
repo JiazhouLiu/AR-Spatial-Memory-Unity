@@ -80,7 +80,7 @@ namespace SpatialMemoryTest {
                     }
                 }
             }
-            else
+            else if(SceneManager.GetActiveScene().name == "Experiment")
             {
                 em = GameObject.Find("ExperimentManager").GetComponent<ExperimentManager>();
                 if (em.gameState == GameState.Learning || em.gameState == GameState.Distractor)
@@ -127,6 +127,28 @@ namespace SpatialMemoryTest {
                 //    foreach (Transform t in borders)
                 //        t.GetComponent<Image>().color = touchedColor;
                 //}
+            }
+            else{
+                if (filled && seen && !selected)
+                {
+                    foreach (Transform t in borders)
+                        t.GetComponent<Image>().color = seenColor;
+                }
+                else if (filled && !seen && selected)
+                {
+                    foreach (Transform t in borders)
+                        t.GetComponent<Image>().color = touchedColor;
+                }
+                else if (filled && seen && selected)
+                {
+                    foreach (Transform t in borders)
+                        t.GetComponent<Image>().color = bothColor;
+                }
+                else if (filled && !seen && !selected)
+                {
+                    foreach (Transform t in borders)
+                        t.GetComponent<Image>().color = Color.white;
+                }
             }
         }
 

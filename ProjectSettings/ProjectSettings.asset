@@ -135,7 +135,10 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -615,11 +618,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Spatial-Memory-Test-Package
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: C:\Users\Clair\Documents\Git Projects\AR-Spatial-Memory\Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: Monash University
+  metroCertificateIssuer: Monash University
+  metroCertificateNotAfter: 00f51ef98c6bda01
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: AR-Spatial-Memory-2020
@@ -638,8 +641,8 @@ PlayerSettings:
     WindowsStoreApps:
       GazeInput: True
       PrivateNetworkClientServer: True
-      SpatialPerception: True
       InternetClientServer: True
+      SpatialPerception: True
       InternetClient: True
       WebCam: True
       Microphone: True

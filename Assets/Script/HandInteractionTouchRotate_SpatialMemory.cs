@@ -41,13 +41,13 @@ namespace SpatialMemoryTest
 
         void IMixedRealityTouchHandler.OnTouchUpdated(HandTrackingInputEventData eventData)
         {
-            
+
             if (SceneManager.GetActiveScene().name == "StartScene")
             {
                 ss = GameObject.Find("MainExperimentManager").GetComponent<StartSceneScript>();
 
-                Debug.Log("Game State: " + ss.gameState.ToString());
-                if (ss != null) {
+                if (ss != null)
+                {
                     if (ss.gameState == GameState.Learning)
                     {
                         if (card.filled)
@@ -68,7 +68,8 @@ namespace SpatialMemoryTest
                     }
                 }
             }
-            else {
+            else if (SceneManager.GetActiveScene().name == "Experiment")
+            {
                 em = GameObject.Find("ExperimentManager").GetComponent<ExperimentManager>();
                 if (em != null)
                 {
@@ -77,7 +78,8 @@ namespace SpatialMemoryTest
                         if (card.filled)
                             card.selected = true;
                     }
-                    else if (em.gameState == GameState.Distractor) {
+                    else if (em.gameState == GameState.Distractor)
+                    {
                         card.selected = true;
                     }
                     else if (em.gameState == GameState.Recall)
@@ -90,6 +92,9 @@ namespace SpatialMemoryTest
                         }
                     }
                 }
+            }
+            else {
+                card.selected = true;
             }
 
         }
