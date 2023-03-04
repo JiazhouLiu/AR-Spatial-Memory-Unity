@@ -17,3 +17,4 @@ TimeSinceStart,TrialNo,TrialID,ParticipantID,Layout,Info,CardSeen,CardSelected,C
 151.12,1,Training,0,Flat,Distractor Number: 2,,,
 156.14,1,Training,0,Flat,Distractor Number: 8,,,
 161.16,1,Training,0,Flat,Distractor Number: 4,,,
+30.86,1,Training,0,NULL,Learning Phase,,,
