@@ -7,33 +7,60 @@ using System.IO;
 using Random = UnityEngine.Random;
 using TMPro;
 using Microsoft.MixedReality.Toolkit;
-using System.Threading.Tasks;
 
 namespace SpatialMemoryTest
 {
     public class StartSceneScript : MonoBehaviour
     {
+        #region Global Static Variables
         public static int ExperimentSequence;
         public static int ParticipantID;
         public static string CurrentDateTime;
         public static int PublicTrialNumber;
         public static float lastTimePast;
+        #endregion
 
-        [Header("Do Not Change")]
+        #region Data Logger
+        public static RawLogger RawLogger;
+        public static InteractionLogger InteractionLogger;
+        public static TaskLogger TaskLogger;
+        public static TrialCardLogger TrialCardLogger;
+        public static AnswerCardLogger AnswerCardLogger;
+        #endregion
+
+        [Header("Reference")]
         public TextMeshPro instruction;
+        public TextMeshPro SetupText;
         public GameObject StartButton;
         public Transform DistractorTask;
         public Transform MemoryTask;
+        public GameObject HandMenu;
+        public GameObject SetupMenu;
 
         [Header("Experiment Parameter")]
         public GameState gameState = GameState.NULL;
 
-        // get input from virtual keyboard
-        private int ExperimentID = -1;
-        private int TrialNumber = -1;
+        #region Setup Experiment ID
+        private int ExperimentID = 0;
+        private int TrialNumber = 0;
+        public static string participantIDText = "";
+        public static string trialIDText = "";
+        private SetupParameter sp;
+        private bool experimentNumberConfirmed = false;
+        private bool trialNumberConfirmed = false;
+        private bool finalConfirmed = false;
+        #endregion
 
+        #region Game Variables
         private List<GameObject> cardLists;
+        private List<GameObject> userSelectedPatternCards;
+        private int accurateNumber = 0;
+        private float adjustedHeight = 0;
+        private bool firstTimeSetup = false;
+        private bool LogHeaderFinished = false;
+        #endregion
 
+        #region Button Booleans
         private bool exploreActivated = false;
         private bool learningActivated = false;
         private bool distractorActivated = false;
@@ -42,20 +69,12 @@ namespace SpatialMemoryTest
         private bool resultActivated = false;
         private bool nextActivated = false;
         private bool backActivated = false;
+        #endregion
 
-        private float adjustedHeight = 0;
-        private bool firstTimeSetup = false;
-        private bool LogHeaderFinished = false;
-
-        private List<GameObject> userSelectedPatternCards;
-        private int accurateNumber = 0;
-
-        // text input
-        TouchScreenKeyboard keyboardParticipant;
-        TouchScreenKeyboard keyboardTrial;
-        TouchScreenKeyboard keyboard;
-        public static string participantIDText = "";
-        public static string trialIDText = "";
+        void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
 
         // Start is called before the first frame update
         void Start()
@@ -78,62 +97,56 @@ namespace SpatialMemoryTest
                 DistractorTask.GetChild(i).localPosition = DistractorTask.GetChild(randomIndex).localPosition;
                 DistractorTask.GetChild(randomIndex).localPosition = temp;
             }
+
+            sp = SetupParameter.ExperimentNumber;
+            RawLogger = GetComponent<RawLogger>();
+            InteractionLogger = GetComponent<InteractionLogger>();
+            TaskLogger = GetComponent<TaskLogger>();
+            TrialCardLogger = GetComponent<TrialCardLogger>();
+            AnswerCardLogger = GetComponent<AnswerCardLogger>();
         }
 
         private void Update()
         {
             if (SceneManager.GetActiveScene().name == "StartScene") {
-                if (ExperimentID == -1) {
-                    GUI.TextField(new Rect(10, 10, 200, 30), "", 30);
-                    // Get Participant ID from Input
-                    keyboardParticipant = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.NumberPad, false, false, false, false, "Please Type Your Participant ID.", 2);
-                    if (keyboardParticipant.status == TouchScreenKeyboard.Status.Done)
-                    {
-                        participantIDText = keyboardParticipant.text;
-
-                        if (participantIDText == "")
-                        { // testing stream
-                            ExperimentID = 0;
-                            ParticipantID = 0;
-                            ExperimentSequence = 1;
-                        }
-                        else
-                        {
-                            ExperimentID = GetNumberFromInput(trialIDText, "Please Type Your Participant ID.");
-                            ParticipantID = ExperimentID;
-                            ExperimentSequence = GetExperimentSequence();
-                        }
-                    }
-                }
-
-                if (TrialNumber == -1) {
-                    GUI.TextField(new Rect(10, 10, 200, 30), "", 30);
-                    // Get Trial ID from Input
-                    keyboardTrial = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.NumberPad, false, false, false, false, "Please Type Your Trial ID.", 2);
-                    if (keyboardTrial.status == TouchScreenKeyboard.Status.Done)
-                    {
-                        trialIDText = keyboardTrial.text;
-
-                        if (trialIDText == "")
-                            TrialNumber = 0;
-                        else
-                            TrialNumber = GetNumberFromInput(trialIDText, "Please Type Your Trial ID.");
-
-                        PublicTrialNumber = TrialNumber;
-                    }
-                }
-
-                if (ExperimentID != -1 && TrialNumber != -1)
+                // setup experiment/participant ID
+                if (!finalConfirmed)
                 {
-                    if (!LogHeaderFinished) {
-                        LogHeaderFinished = true;
+                    if (!experimentNumberConfirmed)
+                        participantIDText = "Experiment Number: " + ExperimentID + ".\n";
+                    else
+                        participantIDText = "Experiment Number: " + ExperimentID + " (Comfirmed).\n";
 
-                        if (TrialNumber == 0) // new experiment
-                            LogDataHeaderAsync(true);
-                        else                  // existing experiment
-                            LogDataHeaderAsync(false);
+                    if (!trialNumberConfirmed)
+                        trialIDText = "Trial Number: " + TrialNumber + ".\n";
+                    else
+                        trialIDText = "Trial Number: " + TrialNumber + " (Comfirmed).\n";
+
+                    if (experimentNumberConfirmed && sp == SetupParameter.ExperimentNumber)
+                        sp = SetupParameter.TrialNumber;
+
+                    SetupText.text = participantIDText + trialIDText;
+                }else // All Confirmed
+                {
+                    if (ExperimentID == 0)
+                    { // testing stream
+                        ParticipantID = 0;
+                        ExperimentSequence = 1;
                     }
-                    
+                    else
+                    {
+                        ParticipantID = ExperimentID;
+                        ExperimentSequence = GetExperimentSequence();
+                    }
+
+                    PublicTrialNumber = TrialNumber;
+
+                    if (!LogHeaderFinished)
+                    {
+                        LogHeaderFinished = true;
+                        LogDataHeader();
+                    }
+
                     if (gameState == GameState.Learning)
                         CheckFilledScanned();
 
@@ -275,6 +288,7 @@ namespace SpatialMemoryTest
             }
         }
 
+        #region Recall Phase
         public bool RecallPhaseCardSelected(GameObject selectedCard)
         {
             if (selectedCard.name.Contains("Card") && userSelectedPatternCards.Count < 2 && !userSelectedPatternCards.Contains(selectedCard))
@@ -310,11 +324,7 @@ namespace SpatialMemoryTest
 
             return finalResult;
         }
-
-        void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
+        #endregion
 
         #region check card propterty
         // check user viewport
@@ -399,83 +409,31 @@ namespace SpatialMemoryTest
         #endregion
 
         #region log related
-        private async Task LogDataHeaderAsync(bool newLog)
+        private void LogDataHeader()
         {
-            if (newLog)
-            {
-                CurrentDateTime = GetDateTimeString();
+            // Raw data log
+            string rawFileName = "Participant_" + ParticipantID + "_Raw";
+            RawLogger.StartNewCSV(rawFileName);
 
+            // interaction log
+            string interactionFileName = "Participant_" + ParticipantID + "_Interaction";
+            InteractionLogger.StartNewCSV(interactionFileName);
 
-                CreateAndWriteLogFile();
-                //// Raw data log
-                //string writerFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_RawData.csv";
-                //StreamWriter writer = new StreamWriter(writerFilePath, false);
-                //string logFileHeader = "TimeSinceStart,UserHeight,TrialNo,TrialID,ParticipantID,ExperimentSequence,Layout,Difficulty,TrialState,CameraPosition.x," +
-                //    "CameraPosition.y,CameraPosition.z,CameraEulerAngles.x,CameraEulerAngles.y,CameraEulerAngles.z,MainControllerPosition.x,MainControllerPosition.y," +
-                //    "MainControllerPosition.z,MainControllerEulerAngles.x,MainControllerEulerAngles.y,MainControllerEulerAngles.z";
-                //writer.WriteLine(logFileHeader);
-                //writer.Close();
+            // Task log
+            string taskFileName = "Participant_" + ParticipantID + "_Task";
+            TaskLogger.StartNewCSV(taskFileName);
 
-                //// head and hand data log
-                //string writerHeadFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_HeadAndHand.csv";
-                //writer = new StreamWriter(writerHeadFilePath, false);
-                //writer.WriteLine("TimeSinceStart,TrialNo,TrialID,ParticipantID,ExperimentSequence,Layout,Difficulty,TrialState,CameraPosition.x," +
-                //    "CameraPosition.y,CameraPosition.z,CameraEulerAngles.x,CameraEulerAngles.y,CameraEulerAngles.z,MainControllerPosition.x,MainControllerPosition.y," +
-                //    "MainControllerPosition.z,MainControllerEulerAngles.x,MainControllerEulerAngles.y,MainControllerEulerAngles.z");
-                //writer.Close();
+            // Trial Card Log
+            string trialCardFileName = "Participant_" + ParticipantID + "_trialCards";
+            TrialCardLogger.StartNewCSV(trialCardFileName);
 
-                //// interaction log
-                //string writerInteractionFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_Interaction.csv";
-                //writer = new StreamWriter(writerInteractionFilePath, false);
-                //writer.WriteLine("TimeSinceStart,TrialNo,TrialID,ParticipantID,Layout,Info,CardSeen,CardSelected,CardAnswered,CardPlayed");
-                //writer.Close();
-
-                //// Answers data log
-                //string writerAnswerFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_Answers.csv";
-                //writer = new StreamWriter(writerAnswerFilePath, false);
-                //writer.WriteLine("ParticipantID,TrialNo,TrialID,Layout,Difficulty,AnswerAccuracy,Card1SeenTime,Card2SeenTime,Card3SeenTime,Card4SeenTime,Card5SeenTime," +
-                //    "Card1SelectTime,Card2SelectTime,Card3SelectTime,Card4SelectTime,Card5SelectTime");
-                //writer.Close();
-            }
-            else
-            {
-                string lastFileName = "";
-
-                GetLastTimeFromLastFile();
-                //string folderPath = "Assets/ExperimentData/ExperimentLog/Participant " + ParticipantID + "/";
-                //DirectoryInfo info = new DirectoryInfo(folderPath);
-                //FileInfo[] fileInfo = info.GetFiles();
-                //foreach (FileInfo file in fileInfo)
-                //{
-                //    if (file.Name.Contains("Participant_" + ParticipantID + "_RawData.csv") && !file.Name.Contains("meta"))
-                //    {
-                //        lastFileName = file.Name;
-                //    }
-                //}
-                //if (lastFileName == "")
-                //{
-                //    Debug.LogError("No previous file found!");
-                //}
-                //else
-                //{
-                //    string writerFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + ParticipantID + "/" + lastFileName;
-                //    string lastLine = File.ReadAllLines(writerFilePath)[File.ReadAllLines(writerFilePath).Length - 1];
-                //    float lastTime = float.Parse(lastLine.Split(',')[0]);
-                //    float height = float.Parse(lastLine.Split(',')[1]);
-
-                //    lastTimePast = lastTime;
-                //    adjustedHeight = height;
-                //}
-            }
+            // Answer Card Log
+            string answerCardFileName = "Participant_" + ParticipantID + "_answerCards";
+            AnswerCardLogger.StartNewCSV(answerCardFileName);
         }
+        #endregion
 
-        string GetDateTimeString()
-        {
-            return DateTime.Now.Month.ToString("D2") + DateTime.Now.Day.ToString("D2") + "-" + DateTime.Now.Hour.ToString("D2") + DateTime.Now.Minute.ToString("D2") + DateTime.Now.Second.ToString("D2");
-        }
-#endregion
-
-#region button groups
+        #region button groups
         public void ExploreButtonPressed()
         {
             exploreActivated = true;
@@ -526,80 +484,35 @@ namespace SpatialMemoryTest
         {
             SceneManager.LoadScene("Experiment", LoadSceneMode.Single);
         }
-#endregion
 
-        private int GetNumberFromInput(string input, string placeholder) {
-            int number;
-            bool success = int.TryParse(input, out number);
-            if (!success)
-            {
-                keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.NumberPad, false, false, false, false, placeholder, 2);
-                if (keyboard.status == TouchScreenKeyboard.Status.Done)
-                    GetNumberFromInput(keyboard.text, placeholder);
-            }
-            return number;
-        }
-
-
-        private async void CreateAndWriteLogFile()
+        public void AddButton()
         {
-#if ENABLE_WINMD_SUPPORT
-            // Get Storage Folder Path
-            Windows.Storage.StorageFolder storageFolder =
-                Windows.Storage.ApplicationData.Current.LocalFolder;
-
-            // Create Raw Data Log File
-            Windows.Storage.StorageFile rawDataFile =
-                await storageFolder.CreateFileAsync("ExperimentLog/Participant/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_RawData.csv",
-                    Windows.Storage.CreationCollisionOption.ReplaceExisting);
-                
-            // write Raw Data Log Header
-            await Windows.Storage.FileIO.WriteTextAsync(rawDataFile, "TimeSinceStart,UserHeight,TrialNo,TrialID,ParticipantID,ExperimentSequence,Layout,Difficulty,TrialState," + 
-            "CameraPosition.x,CameraPosition.y,CameraPosition.z,CameraEulerAngles.x,CameraEulerAngles.y,CameraEulerAngles.z");
-
-            // Create Head Data Log File
-            Windows.Storage.StorageFile headDataFile =
-                await storageFolder.CreateFileAsync("ExperimentLog/Participant/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_HeadAndHand.csv",
-                    Windows.Storage.CreationCollisionOption.ReplaceExisting);
-
-            // write Head Data Log
-            await Windows.Storage.FileIO.WriteTextAsync(headDataFile, "TimeSinceStart,TrialNo,TrialID,ParticipantID,ExperimentSequence,Layout,Difficulty,TrialState," +
-                "CameraPosition.x,CameraPosition.y,CameraPosition.z,CameraEulerAngles.x,CameraEulerAngles.y,CameraEulerAngles.z");
-
-            // Create Interaction Log File
-            Windows.Storage.StorageFile interactionDataFile =
-                await storageFolder.CreateFileAsync("ExperimentLog/Participant/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_Interaction.csv",
-                    Windows.Storage.CreationCollisionOption.ReplaceExisting);
-
-            // Write Interaction Log
-            await Windows.Storage.FileIO.WriteTextAsync(interactionDataFile, "TimeSinceStart,TrialNo,TrialID,ParticipantID,Layout,Info,CardSeen,CardSelected,CardAnswered,CardPlayed");
-
-            // Create Answer Data Log
-            Windows.Storage.StorageFile answerDataFile =
-                await storageFolder.CreateFileAsync("ExperimentLog/Participant/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_Answers.csv",
-                    Windows.Storage.CreationCollisionOption.ReplaceExisting);
-
-            // Write Answer Data Log
-            await Windows.Storage.FileIO.WriteTextAsync(answerDataFile, 
-                "ParticipantID,TrialNo,TrialID,Layout,Difficulty,AnswerAccuracy,Card1SeenTime,Card2SeenTime,Card3SeenTime,Card4SeenTime,Card5SeenTime," +
-                "Card1SelectTime,Card2SelectTime,Card3SelectTime,Card4SelectTime,Card5SelectTime");
-#endif
+            if (sp == SetupParameter.ExperimentNumber)
+                ExperimentID++;
+            else if (sp == SetupParameter.TrialNumber)
+                TrialNumber++;
         }
 
-        private async void GetLastTimeFromLastFile() {
-#if ENABLE_WINMD_SUPPORT
-                Windows.Storage.StorageFolder storageFolder =
-                    Windows.Storage.ApplicationData.Current.LocalFolder;
-                Windows.Storage.StorageFile rawFile =
-                    await storageFolder.GetFileAsync("ExperimentLog/Participant/Participant " + ParticipantID + "/Participant_" + ParticipantID + "_RawData.csv");
-
-                string text = await Windows.Storage.FileIO.ReadTextAsync(rawFile);
-                float lastTime = float.Parse(text.Split(',')[0]);
-                float height = float.Parse(text.Split(',')[1]);
-
-                lastTimePast = lastTime;
-                adjustedHeight = height;
-#endif
+        public void MinuesButton()
+        {
+            if (sp == SetupParameter.ExperimentNumber)
+                ExperimentID--;
+            else if (sp == SetupParameter.TrialNumber)
+                TrialNumber--;
         }
+
+        public void ConfirmButton()
+        {
+            if (!experimentNumberConfirmed)
+                experimentNumberConfirmed = true;
+            else if (!trialNumberConfirmed)
+                trialNumberConfirmed = true;
+            else {
+                finalConfirmed = true;
+                SetupMenu.SetActive(false);
+                HandMenu.SetActive(true);
+            }
+        }
+        #endregion
     }
 }

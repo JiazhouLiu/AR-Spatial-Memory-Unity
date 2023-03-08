@@ -31,10 +31,7 @@ namespace SpatialMemoryTest
                 if (em != null)
                 {
                     if (em.gameState == GameState.Distractor)
-                    {
                         em.RecordTouchingCard(gameObject);
-                        Debug.Log("Touch Complete");
-                    }
                 }
             }
         }

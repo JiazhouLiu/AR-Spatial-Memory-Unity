@@ -19,7 +19,6 @@ namespace SpatialMemoryTest
         public TextMeshPro Instruction;
         public Transform DistractorTask;
         public TextMeshPro DistractorTaskInstruction;
-        public DataLoggingManager dataLogger;
         public GameObject startButton;
         public GameObject resultButton;
         public GameObject nextButton;
@@ -84,12 +83,11 @@ namespace SpatialMemoryTest
         private float selectTime = 0;
         private List<float> selectTimeLog;
         private int accurateNumber = 0;
-        StreamWriter writer;
-        StreamWriter writerHead;
-        StreamWriter writerAnswer;
-        StreamWriter writerInteraction;
-        StreamWriter writerTrialCards;
-        StreamWriter writerAnswerCards;
+        private RawLogger rawLogger;
+        private InteractionLogger interactionLogger;
+        private TaskLogger taskLogger;
+        private TrialCardLogger trialCardLogger;
+        private AnswerCardLogger answerCardLogger;
         #endregion
 
         // Start is called before the first frame update
@@ -120,8 +118,6 @@ namespace SpatialMemoryTest
 
             // setup adjusted height
             adjustedHeight = Camera.main.transform.position.y - 0.75f;
-
-
 
             if (GameObject.Find("MainExperimentManager") != null)
             {
@@ -743,81 +739,60 @@ namespace SpatialMemoryTest
 
         #region Log System
         private void SetupLoggingSystem() {
-            string writerFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + StartSceneScript.ParticipantID + "/Participant_" + StartSceneScript.ParticipantID + "_RawData.csv";
-            writer = new StreamWriter(writerFilePath, true);
-
-            string writerHeadFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + StartSceneScript.ParticipantID + "/Participant_" + StartSceneScript.ParticipantID + "_HeadAndHand.csv";
-            writerHead = new StreamWriter(writerHeadFilePath, true);
-
-            string writerAnswerFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + StartSceneScript.ParticipantID + "/Participant_" + StartSceneScript.ParticipantID + "_Answers.csv";
-            writerAnswer = new StreamWriter(writerAnswerFilePath, true);
-
-            string writerInteractionFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + StartSceneScript.ParticipantID + "/Participant_" + StartSceneScript.ParticipantID + "_Interaction.csv";
-            writerInteraction = new StreamWriter(writerInteractionFilePath, true);
-
-            string writerTrialCardsFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + StartSceneScript.ParticipantID + "/trialCards.csv";
-            writerTrialCards = new StreamWriter(writerTrialCardsFilePath, true);
-
-            string writerAnswerCardsFilePath = "Assets/ExperimentData/ExperimentLog/Participant " + StartSceneScript.ParticipantID + "/answerCards.csv";
-            writerAnswerCards = new StreamWriter(writerAnswerCardsFilePath, true);
+            rawLogger = StartSceneScript.RawLogger;
+            interactionLogger = StartSceneScript.InteractionLogger;
+            taskLogger = StartSceneScript.TaskLogger;
+            trialCardLogger = StartSceneScript.TrialCardLogger;
+            answerCardLogger = StartSceneScript.AnswerCardLogger;
 
         }
 
         // write to log file
         private void WritingToLog()
         {
-            if (writer != null && Camera.main != null)
+            if (rawLogger != null && Camera.main != null)
             {
-                writer.WriteLine(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
-                    GetLayout() + "," + GetDifficulty() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
-                //+ "," +  VectorToString(mainLogController.position) + "," + VectorToString(mainLogController.eulerAngles)) ;
-                writer.Flush();
-            }
-
-            if (writerHead != null && Camera.main != null)
-            {
-                writerHead.WriteLine(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
-                    GetLayout() + "," + GetDifficulty() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
-                //+ "," + VectorToString(mainLogController.position) + "," + VectorToString(mainLogController.eulerAngles));
-                writerHead.Flush();
+                rawLogger.AddRow(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
+                    GetLayout() + "," + GetPhysicalDependence() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
+                rawLogger.FlushData();
             }
         }
 
         private void WriteAnswerToLog()
         {
-            if (writerAnswer != null && userSelectedPatternCards.Count != 0)
+            if (taskLogger != null && userSelectedPatternCards.Count != 0)
             {
-                writerAnswer.WriteLine(StartSceneScript.ParticipantID + "," + GetTrialNumber() + "," + GetTrialID() + "," + GetLayout() + "," +
-                    GetDifficulty() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
-                writerAnswer.Flush();
+                taskLogger.AddRow(StartSceneScript.ParticipantID + "," + GetTrialNumber() + "," + GetTrialID() + "," + GetLayout() + "," +
+                    GetPhysicalDependence() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
+                taskLogger.FlushData();
             }
         }
 
         public void WriteInteractionToLog(string info)
         {
-            if (writerInteraction != null)
+            if (interactionLogger != null)
             {
                 if (info.Contains("seen"))
-                    writerInteraction.WriteLine(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
+                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
                         StartSceneScript.ParticipantID + "," + GetLayout() + "," + "Card," + info.Split(' ')[0].Remove(0, 4) + ",,,");
                 else if (info.Contains("selected"))
-                    writerInteraction.WriteLine(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
+                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
                        StartSceneScript.ParticipantID + "," + GetLayout() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + ",,");
                 else if (info.Contains("answered"))
-                    writerInteraction.WriteLine(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
+                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
                        StartSceneScript.ParticipantID + "," + GetLayout() + "," + "Card,,," + info.Split(' ')[0].Remove(0, 4) + ",");
                 else if (info.Contains("played"))
-                    writerInteraction.WriteLine(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
+                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
                        StartSceneScript.ParticipantID + "," + GetLayout() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
                 else
-                    writerInteraction.WriteLine(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + GetLayout() + "," + info + ",,,");
-                writerInteraction.Flush();
+                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + GetLayout() + "," + info + ",,,");
+                interactionLogger.FlushData();
             }
         }
 
         private void WriteCardsLog()
         {
-            if (writerTrialCards != null && userSelectedPatternCards.Count != 0)
+            if (trialCardLogger != null && userSelectedPatternCards.Count != 0)
             {
                 string final = "";
 
@@ -828,11 +803,11 @@ namespace SpatialMemoryTest
 
                 final.Remove(final.Length - 1);
 
-                writerTrialCards.WriteLine(final);
-                writerTrialCards.Flush();
+                trialCardLogger.AddRow(final);
+                trialCardLogger.FlushData();
             }
 
-            if (writerAnswerCards != null)
+            if (answerCardLogger != null)
             {
                 string final = "";
 
@@ -844,48 +819,12 @@ namespace SpatialMemoryTest
 
                 final.Remove(final.Length - 1);
 
-                writerAnswerCards.WriteLine(final);
-                writerAnswerCards.Flush();
+                answerCardLogger.AddRow(final);
+                answerCardLogger.FlushData();
             }
         }
 
         private void CloseAllWritersAndQuit() {
-            if (writer != null)
-            {
-                writer.Close();
-                writer = null;
-            }
-
-            if (writerHead != null)
-            {
-                writerHead.Close();
-                writerHead = null;
-            }
-
-            if (writerAnswer != null)
-            {
-                writerAnswer.Close();
-                writerAnswer = null;
-            }
-
-            if (writerInteraction != null)
-            {
-                writerInteraction.Close();
-                writerInteraction = null;
-            }
-
-            if (writerTrialCards != null)
-            {
-                writerTrialCards.Close();
-                writerTrialCards = null;
-            }
-
-            if (writerAnswerCards != null)
-            {
-                writerAnswerCards.Close();
-                writerAnswerCards = null;
-            }
-
             QuitGame();
         }
         #endregion
@@ -1099,9 +1038,17 @@ namespace SpatialMemoryTest
             }
         }
 
-        private string GetDifficulty()
+        private string GetPhysicalDependence()
         {
-            return difficultyLevel + "";
+            switch (PEDependence)
+            {
+                case PhysicalEnvironmentDependence.High:
+                    return "High Dependence";
+                case PhysicalEnvironmentDependence.Low:
+                    return "Low Dependence";
+                default:
+                    return "NULL";
+            }
         }
 
         private string GetAccuracy()

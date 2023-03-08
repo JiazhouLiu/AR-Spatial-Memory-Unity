@@ -28,4 +28,9 @@ namespace SpatialMemoryTest
         Low,
         NULL
     }
+
+    public enum SetupParameter { 
+        ExperimentNumber,
+        TrialNumber
+    }
 }
