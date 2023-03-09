@@ -365,7 +365,7 @@ namespace SpatialMemoryTest
         #region setters
         private void SetupTaskPositionRotation(Transform t)
         {
-            t.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0.5f + Vector3.down * 0.5f;
+            t.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
 
             t.LookAt(Camera.main.transform.position);
             t.localEulerAngles = new Vector3(0, t.localEulerAngles.y + 180, 0);

@@ -326,7 +326,7 @@ namespace SpatialMemoryTest
                     transform.LookAt(Camera.main.transform.position);
                     transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
                     //DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
                     DistractorTask.LookAt(Camera.main.transform.position);
                     DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
@@ -336,7 +336,7 @@ namespace SpatialMemoryTest
                     transform.LookAt(Camera.main.transform.position);
                     transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
                     DistractorTask.LookAt(Camera.main.transform.position);
                     DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
                     break;
@@ -752,9 +752,9 @@ namespace SpatialMemoryTest
         {
             if (rawLogger != null && Camera.main != null)
             {
-                rawLogger.AddRow(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
-                    GetLayout() + "," + GetPhysicalDependence() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
-                rawLogger.FlushData();
+                //rawLogger.AddRow(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
+                //    GetLayout() + "," + GetPhysicalDependence() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
+                //rawLogger.FlushData();
             }
         }
 
