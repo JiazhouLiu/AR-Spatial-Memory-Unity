@@ -139,9 +139,6 @@ namespace SpatialMemoryTest
             localDistractorTime = distractorTime;
             localEachDistractorReactTime = eachDistractorReactTime;
 
-            // Auto log data using new data logger
-            // dataLogger.StartLogging();
-
             // setup experiment
             PrepareExperiment();
         }
@@ -165,7 +162,7 @@ namespace SpatialMemoryTest
             if (gameState == GameState.Recall)
                 RecallPhaseCheck();
 
-            WritingToLog();
+            //WritingToLog();
 
             // testing
             if (Input.GetKeyDown("n"))
@@ -319,24 +316,25 @@ namespace SpatialMemoryTest
         }
 
         private void SetGridPosition(Layout localLayout) {
+            float positionY = Camera.main.transform.position.y - 0.5f;
             switch (localLayout)
             {
                 case Layout.Flat:
-                    transform.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
+
+                    transform.position = new Vector3(0, positionY, 1);
                     transform.LookAt(Camera.main.transform.position);
                     transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
-                    //DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    DistractorTask.position = new Vector3(0, positionY, 0.5f);
                     DistractorTask.LookAt(Camera.main.transform.position);
                     DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
                     break;
                 case Layout.Wraparound:
-                    transform.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 0f + Vector3.down * 0.5f;
+                    transform.position = new Vector3(0, positionY, 0);
                     transform.LookAt(Camera.main.transform.position);
                     transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-                    DistractorTask.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
+                    DistractorTask.position = new Vector3(0, positionY, 0.5f);
                     DistractorTask.LookAt(Camera.main.transform.position);
                     DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
                     break;
@@ -627,10 +625,17 @@ namespace SpatialMemoryTest
         public void InitiateResultPhase()
         {
             gameState = GameState.Result;
+
             WriteInteractionToLog("Result");
+            interactionLogger.FlushData();
+
             CheckResult();
             Instruction.text = "Result: " + accurateNumber + " / " + difficultyLevel;
 
+            resultButton.SetActive(false);
+            breakButton.SetActive(false);
+            wellDoneButton.SetActive(false);
+            nextButton.SetActive(false);
             // button activation based on cases
             if (trialNo == 6 || trialNo == 12 || trialNo == 18) { // break button activated
                 breakButton.SetActive(true);
@@ -739,7 +744,7 @@ namespace SpatialMemoryTest
 
         #region Log System
         private void SetupLoggingSystem() {
-            rawLogger = StartSceneScript.RawLogger;
+            //rawLogger = StartSceneScript.RawLogger;
             interactionLogger = StartSceneScript.InteractionLogger;
             taskLogger = StartSceneScript.TaskLogger;
             trialCardLogger = StartSceneScript.TrialCardLogger;
@@ -752,9 +757,9 @@ namespace SpatialMemoryTest
         {
             if (rawLogger != null && Camera.main != null)
             {
-                //rawLogger.AddRow(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
-                //    GetLayout() + "," + GetPhysicalDependence() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
-                //rawLogger.FlushData();
+                rawLogger.AddRow(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
+                    GetLayout() + "," + GetPhysicalDependence() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
+                rawLogger.FlushData();
             }
         }
 
@@ -786,7 +791,6 @@ namespace SpatialMemoryTest
                        StartSceneScript.ParticipantID + "," + GetLayout() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
                 else
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + GetLayout() + "," + info + ",,,");
-                interactionLogger.FlushData();
             }
         }
 
@@ -880,6 +884,11 @@ namespace SpatialMemoryTest
         {
             switch (experimentSequence)
             {
+                case 0:
+                    if ((trialNo <= 6 && trialNo >= 1) || (trialNo <= 18 && trialNo >= 13))
+                        return Layout.Flat;
+                    else
+                        return Layout.Wraparound;
                 case 1:
                     if ((trialNo <= 6 && trialNo >= 1) || (trialNo <= 18 && trialNo >= 13))
                         return Layout.Flat;
@@ -910,6 +919,11 @@ namespace SpatialMemoryTest
         {
             switch (experimentSequence)
             {
+                case 0:
+                    if (trialNo <= 12 && trialNo >= 1)
+                        return PhysicalEnvironmentDependence.Low;
+                    else
+                        return PhysicalEnvironmentDependence.High;
                 case 1:
                     if (trialNo <= 12 && trialNo >= 1)
                         return PhysicalEnvironmentDependence.Low;

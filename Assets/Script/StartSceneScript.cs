@@ -21,7 +21,7 @@ namespace SpatialMemoryTest
         #endregion
 
         #region Data Logger
-        public static RawLogger RawLogger;
+        //public static RawLogger RawLogger;
         public static InteractionLogger InteractionLogger;
         public static TaskLogger TaskLogger;
         public static TrialCardLogger TrialCardLogger;
@@ -99,7 +99,7 @@ namespace SpatialMemoryTest
             }
 
             sp = SetupParameter.ExperimentNumber;
-            RawLogger = GetComponent<RawLogger>();
+            //RawLogger = GetComponent<RawLogger>();
             InteractionLogger = GetComponent<InteractionLogger>();
             TaskLogger = GetComponent<TaskLogger>();
             TrialCardLogger = GetComponent<TrialCardLogger>();
@@ -412,8 +412,8 @@ namespace SpatialMemoryTest
         private void LogDataHeader()
         {
             // Raw data log
-            string rawFileName = "Participant_" + ParticipantID + "_Raw";
-            RawLogger.StartNewCSV(rawFileName);
+            //string rawFileName = "Participant_" + ParticipantID + "_Raw";
+            //RawLogger.StartNewCSV(rawFileName);
 
             // interaction log
             string interactionFileName = "Participant_" + ParticipantID + "_Interaction";
