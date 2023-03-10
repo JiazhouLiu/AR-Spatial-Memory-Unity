@@ -75,6 +75,7 @@ namespace SpatialMemoryTest
         private bool allSelected = false;
         private bool learningTimesUp = false;
         private bool gridCalibrate = false;
+        private bool readyForDistractor = false;
         #endregion
 
         #region Log use variables
@@ -117,7 +118,7 @@ namespace SpatialMemoryTest
                 distractorCards.Add(t.gameObject);
 
             // setup adjusted height
-            adjustedHeight = Camera.main.transform.position.y - 0.75f;
+            adjustedHeight = Camera.main.transform.position.y - 0.3f;
 
             if (GameObject.Find("MainExperimentManager") != null)
             {
@@ -206,6 +207,8 @@ namespace SpatialMemoryTest
 
                 allSeen = false;
                 allSelected = false;
+                readyForDistractor = false;
+                learningTimesUp = false;
 
                 scanTime = 0f;
                 selectTime = 0f;
@@ -316,25 +319,24 @@ namespace SpatialMemoryTest
         }
 
         private void SetGridPosition(Layout localLayout) {
-            float positionY = Camera.main.transform.position.y - 0.5f;
             switch (localLayout)
             {
                 case Layout.Flat:
 
-                    transform.position = new Vector3(0, positionY, 1);
+                    transform.position = new Vector3(0, adjustedHeight, 1);
                     transform.LookAt(Camera.main.transform.position);
                     transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-                    DistractorTask.position = new Vector3(0, positionY, 0.5f);
+                    DistractorTask.position = new Vector3(0, adjustedHeight, 0.5f);
                     DistractorTask.LookAt(Camera.main.transform.position);
                     DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
                     break;
                 case Layout.Wraparound:
-                    transform.position = new Vector3(0, positionY, 0);
+                    transform.position = new Vector3(0, adjustedHeight, 0);
                     transform.LookAt(Camera.main.transform.position);
                     transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
 
-                    DistractorTask.position = new Vector3(0, positionY, 0.5f);
+                    DistractorTask.position = new Vector3(0, adjustedHeight, 0.5f);
                     DistractorTask.LookAt(Camera.main.transform.position);
                     DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
                     break;
@@ -498,7 +500,12 @@ namespace SpatialMemoryTest
                 if (IsCardFilled(card))
                 {
                     SetCardsColor(card.transform, Color.black);
-                    card.transform.localEulerAngles = Vector3.zero;
+
+                    if (layout == Layout.Flat)
+                        card.transform.localEulerAngles = Vector3.zero;
+                    else
+                        card.transform.localEulerAngles += Vector3.up * 180;
+
                     card.GetComponent<Card>().selected = false;
                     card.GetComponent<Card>().rotating = false;
                     card.GetComponent<Card>().seen = false;
@@ -539,46 +546,55 @@ namespace SpatialMemoryTest
         }
 
         private void DistractorPhaseCheck() {
-            if (localDistractorTime >= 0) {
-                localDistractorTime -= Time.deltaTime;
+            if (Vector3.Distance(Camera.main.transform.position, Vector3.zero) < 0.5f && !readyForDistractor) // check participant back to origin point
+                readyForDistractor = true;
 
-                if (localEachDistractorReactTime <= 0)
+            if (readyForDistractor) {
+                if (localDistractorTime >= 0)
                 {
-                    DistractorTaskInstruction.color = Color.red;
-                    localDistractorTime += eachDistractorReactTime;
-                    localEachDistractorReactTime = eachDistractorReactTime;
+                    localDistractorTime -= Time.deltaTime;
 
-                    GetNewDistractorTask();
-                }
-                else {
-                    localEachDistractorReactTime -= Time.deltaTime;
+                    if (localEachDistractorReactTime <= 0)
+                    {
+                        DistractorTaskInstruction.color = Color.red;
+                        localDistractorTime += eachDistractorReactTime;
+                        localEachDistractorReactTime = eachDistractorReactTime;
 
-                    Instruction.text = "Select the number below!\nTimes remaining: " + localDistractorTime.ToString("0.0");
+                        GetNewDistractorTask();
+                    }
+                    else
+                    {
+                        localEachDistractorReactTime -= Time.deltaTime;
 
-                    if (finishTouching) {
-                        finishTouching = false;
+                        Instruction.text = "Select the number below!\nTimes remaining: " + localDistractorTime.ToString("0.0");
 
-                        if (touchingCard.name != currentGameNumber.ToString())
+                        if (finishTouching)
                         {
-                            localDistractorTime += eachDistractorReactTime;
-                            GetNewDistractorTask();
-                            // play sound or show text
-                            Instruction.color = Color.red;
-                        }
-                        else if(touchingCard.name == currentGameNumber.ToString())
-                        {
-                            Instruction.color = Color.white;
-                            DistractorTaskInstruction.color = Color.white;
-                            localEachDistractorReactTime = eachDistractorReactTime;
-                            GetNewDistractorTask();
+                            finishTouching = false;
+
+                            if (touchingCard.name != currentGameNumber.ToString())
+                            {
+                                localDistractorTime += eachDistractorReactTime;
+                                GetNewDistractorTask();
+                                // play sound or show text
+                                Instruction.color = Color.red;
+                            }
+                            else if (touchingCard.name == currentGameNumber.ToString())
+                            {
+                                Instruction.color = Color.white;
+                                DistractorTaskInstruction.color = Color.white;
+                                localEachDistractorReactTime = eachDistractorReactTime;
+                                GetNewDistractorTask();
+                            }
                         }
                     }
                 }
+                else
+                {
+                    HideDistractorCards();
+                    InitiateRecallPhase();
+                }
             }
-            else {
-                HideDistractorCards();
-                InitiateRecallPhase();
-            }         
         }
         #endregion
 
@@ -655,9 +671,12 @@ namespace SpatialMemoryTest
             foreach (GameObject card in patternCards) 
             {
                 SetCardsColor(card.transform, Color.black);
-                card.transform.localEulerAngles = Vector3.zero;
+                if (layout == Layout.Flat)
+                    card.transform.localEulerAngles = Vector3.zero;
+                else
+                    card.transform.localEulerAngles += Vector3.up * 180;
 
-                if(IsCardSelected(card))
+                if (IsCardSelected(card))
                     SetCardsColor(card.transform, Color.white);
 
                 if (IsCardFilled(card))
@@ -673,7 +692,7 @@ namespace SpatialMemoryTest
                 WriteAnswerToLog();
             }
             trialNo++;
-            gridCalibrate = false;
+            //gridCalibrate = false;
 
             if (trialNo > maxTrialNo)
                 CloseAllWritersAndQuit();
