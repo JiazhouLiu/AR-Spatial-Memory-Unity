@@ -118,7 +118,7 @@ namespace SpatialMemoryTest
                 distractorCards.Add(t.gameObject);
 
             // setup adjusted height
-            adjustedHeight = Camera.main.transform.position.y - 0.3f;
+            adjustedHeight = Camera.main.transform.position.y - 0.5f;
 
             if (GameObject.Find("MainExperimentManager") != null)
             {
@@ -503,8 +503,8 @@ namespace SpatialMemoryTest
 
                     if (layout == Layout.Flat)
                         card.transform.localEulerAngles = Vector3.zero;
-                    else
-                        card.transform.localEulerAngles += Vector3.up * 180;
+                    //else
+                        //card.transform.localEulerAngles += Vector3.up * 180;
 
                     card.GetComponent<Card>().selected = false;
                     card.GetComponent<Card>().rotating = false;
@@ -673,8 +673,8 @@ namespace SpatialMemoryTest
                 SetCardsColor(card.transform, Color.black);
                 if (layout == Layout.Flat)
                     card.transform.localEulerAngles = Vector3.zero;
-                else
-                    card.transform.localEulerAngles += Vector3.up * 180;
+                //else
+                    //card.transform.localEulerAngles += Vector3.up * 180;
 
                 if (IsCardSelected(card))
                     SetCardsColor(card.transform, Color.white);
