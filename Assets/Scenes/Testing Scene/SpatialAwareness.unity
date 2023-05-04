@@ -123,6 +123,59 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &5193862
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5193863}
+  - component: {fileID: 5193864}
+  m_Layer: 0
+  m_Name: SpacePinVisualizer (Global)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5193863
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5193862}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.25, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1341930505}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5193864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5193862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e62df43f837dec04690c9413ceb5c046, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  weightCubeMaxSize: 0.19
+  verticalOffset: -1.65
+  textVerticalOffset: -1.45
+  wireFrameMaterial: {fileID: 2100000, guid: 30a725532743f544d8873fd08a9040bb, type: 2}
+  meshMaterial: {fileID: 2100000, guid: e7629c5005d65c94ba769b3e2f1fe247, type: 2}
+  extrapolatedMeshMaterial: {fileID: 2100000, guid: 3cb6998e3870cb345a31ad89410518c1, type: 2}
+  weightsMaterial: {fileID: 2100000, guid: 1e46624c9f6c5374da2204cd8c11e698, type: 2}
+  percentageWorldSpaceCanvasPrefab: {fileID: 3335127461111217805, guid: 20ac37323fee4694891b0de09cb74933, type: 3}
+  targetSubtree: {fileID: 0}
+  isVisible: 1
 --- !u!1 &74001233
 GameObject:
   m_ObjectHideFlags: 0
@@ -146,13 +199,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 74001233}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 624307635}
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_Father: {fileID: 763733952}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &181228729
 GameObject:
@@ -278,6 +331,54 @@ Transform:
   m_Father: {fileID: 624307635}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &336799672
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 336799673}
+  - component: {fileID: 336799674}
+  m_Layer: 2
+  m_Name: AnchorGraphVisual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &336799673
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336799672}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1341930505}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &336799674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336799672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93bf53c0f434c774fae7087613e7f766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Prefab_FrameViz: {fileID: 114836466068092498, guid: 14e05d2e3eab0df479903e125064ce4b, type: 3}
+  Prefab_SpongyAnchorViz: {fileID: 1510356976864930653, guid: b5ba1fa0f254af640a17dc22e4688b87, type: 3}
+  Prefab_FrozenAnchorViz: {fileID: 114965271361823434, guid: d47affea335f196479d4ec680aca4223, type: 3}
+  connectingLine: {fileID: 2100000, guid: 0d9513524d19caa48a7071447d2cd84f, type: 2}
+  verticalDisplacement: -1
 --- !u!1 &358614835
 GameObject:
   m_ObjectHideFlags: 1
@@ -499,6 +600,70 @@ MonoBehaviour:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
+--- !u!1 &763733951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 763733952}
+  m_Layer: 0
+  m_Name: WLT_Adjustment
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &763733952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763733951}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 74001234}
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1341930504
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1341930505}
+  m_Layer: 0
+  m_Name: WorldLocking
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1341930505
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1341930504}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1406345328}
+  - {fileID: 336799673}
+  - {fileID: 5193863}
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!850595691 &1365572870
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -560,6 +725,80 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaDirect: 0.5
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
+--- !u!1 &1406345327
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1406345328}
+  - component: {fileID: 1406345329}
+  m_Layer: 0
+  m_Name: WorldLockingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1406345328
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406345327}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1341930505}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1406345329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406345327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89a5fa969ae86b94db3d314558cf69ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shared:
+    settings:
+      useDefaults: 1
+      Enabled: 1
+      AutoMerge: 1
+      AutoRefreeze: 1
+      AutoLoad: 1
+      AutoSave: 1
+    linkageSettings:
+      useExisting: 0
+      applyAdjustment: 1
+      NoPitchAndRoll: 0
+      AdjustmentFrame: {fileID: 763733952}
+      CameraParent: {fileID: 74001234}
+    anchorSettings:
+      useDefaults: 0
+      anchorSubsystem: 2
+      ARSessionSource: {fileID: 0}
+      ARSessionOriginSource: {fileID: 0}
+      MinNewAnchorDistance: 1
+      MaxAnchorEdgeLength: 1.2
+      MaxLocalAnchors: 0
+      NullSubsystemInEditor: 1
+  diagnosticsSettings:
+    settings:
+      useDefaults: 1
+      Enabled: 0
+      StorageSubdirectory: FrozenWorldDiagnostics
+      StorageFileTemplate: FrozenWorld-[Machine]-[Timestamp].hkfw
+      MaxKilobytesPerFile: 2048
+      MaxNumberOfFiles: 64
 --- !u!1 &1416902018
 GameObject:
   m_ObjectHideFlags: 1

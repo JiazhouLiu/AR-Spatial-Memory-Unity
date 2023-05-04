@@ -51,8 +51,6 @@
     "com.microsoft.azure.spatial-anchors-sdk.core": "file:MixedReality/com.microsoft.azure.spatial-anchors-sdk.core-2.13.3.tgz",
     "com.microsoft.mixedreality.worldlockingtools": "file:MixedReality/com.microsoft.mixedreality.worldlockingtools-1.5.9.tgz",
     "com.microsoft.azure.object-anchors.runtime": "file:MixedReality/com.microsoft.azure.object-anchors.runtime-0.25.0.tgz",
-    "com.microsoft.azure.spatial-anchors-sdk.windows": "file:MixedReality/com.microsoft.azure.spatial-anchors-sdk.windows-2.13.3.tgz",
-    "com.microsoft.mixedreality.wlt.asa.samples": "file:MixedReality/com.microsoft.mixedreality.wlt.asa.samples-1.5.9.tgz",
-    "com.microsoft.mixedreality.worldlockingsamples": "file:MixedReality/com.microsoft.mixedreality.worldlockingsamples-1.5.9.tgz"
+    "com.microsoft.azure.spatial-anchors-sdk.windows": "file:MixedReality/com.microsoft.azure.spatial-anchors-sdk.windows-2.13.3.tgz"
   }
 }
