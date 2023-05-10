@@ -15,17 +15,17 @@ namespace SpatialMemoryTest
         NULL
     }
 
-    public enum Layout
+    public enum AlignmentCondition
     {
-        Flat,
-        Wraparound,
+        AlignWithFurniture,
+        NotAlignWithFurniture,
         NULL
     }
 
-    public enum PhysicalEnvironmentDependence
+    public enum FurnitureCondition
     {
-        High,
-        Low,
+        HasFurniture,
+        NoFurniture,
         NULL
     }
 

@@ -26,8 +26,14 @@ namespace SpatialMemoryTest
         public GameObject breakButton;
 
         [Header("Task File")]
-        public TextAsset Patterns5Flat;
-        public TextAsset Patterns5Circular;
+        public TextAsset Patterns_Fur_Ali;
+        public TextAsset Patterns_Fur_NotAli;
+        public TextAsset Patterns_NoFur_Ali;
+        public TextAsset Patterns_NoFur_NotAli;
+        public TextAsset AlignmentColumnPositions;
+        public TextAsset NotAlignmentColumnPositions;
+        public TextAsset AlignmentColumnRotations;
+        public TextAsset NotAlignmentColumnRotations;
         public TextAsset GameTask;
 
         [Header("Pre-study Variable")]
@@ -41,8 +47,8 @@ namespace SpatialMemoryTest
         public int numberOfColumns;
 
         [Header("In-study Variable")]
-        public Layout layout;
-        public PhysicalEnvironmentDependence PEDependence;
+        public AlignmentCondition alignmentCon;
+        public FurnitureCondition furnitureCon;
         public GameState gameState;
 
         #region Game setup private variables
@@ -58,6 +64,8 @@ namespace SpatialMemoryTest
         #endregion
 
         #region Trial variables
+        private Vector3[] columnPositions = new Vector3[12];
+        private Vector3[] columnRotations = new Vector3[12];
         private List<GameObject> patternCards;
         private List<GameObject> distractorCards;
         private List<GameObject> userSelectedPatternCards;
@@ -67,14 +75,15 @@ namespace SpatialMemoryTest
         private float LocalMemoryTime;
         private float localDistractorTime;
         private float localEachDistractorReactTime;
-        private List<string> FlatTaskList;
-        private List<string> CircularTaskList;
+        private List<string> Fur_Ali_TaskList;
+        private List<string> Fur_NotAli_TaskList;
+        private List<string> NoFur_Ali_TaskList;
+        private List<string> NoFur_NotAli_TaskList;
         private int[] currentPattern;
         private int currentGameNumber;
         private bool allSeen = false;        
         private bool allSelected = false;
         private bool learningTimesUp = false;
-        private bool gridCalibrate = false;
         private bool readyForDistractor = false;
         #endregion
 
@@ -102,8 +111,11 @@ namespace SpatialMemoryTest
             touchingCards = new List<GameObject>();
 
             // initialise task list
-            FlatTaskList = new List<string>();
-            CircularTaskList = new List<string>();
+            Fur_Ali_TaskList = new List<string>();
+            Fur_NotAli_TaskList = new List<string>();
+            NoFur_Ali_TaskList = new List<string>();
+            NoFur_NotAli_TaskList = new List<string>();
+
 
             // initialise time log
             scanTimeLog = new List<float>();
@@ -134,7 +146,11 @@ namespace SpatialMemoryTest
                 // setup writer stream
                 SetupLoggingSystem();
             }
-            
+
+            // adjust distractor task board position and rotation
+            DistractorTask.position = new Vector3(0, adjustedHeight, 0.5f);
+            DistractorTask.localEulerAngles = Vector3.zero; // need to check this
+
             // setup timers
             LocalMemoryTime = memoryTime;
             localDistractorTime = distractorTime;
@@ -147,15 +163,8 @@ namespace SpatialMemoryTest
         // Update is called once per frame
         private void Update()
         {
-
-            if (gameState == GameState.Learning) {
-                if (!gridCalibrate) {
-                    gridCalibrate = true;
-                    SetGridPosition(layout);
-                }
+            if (gameState == GameState.Learning)
                 LearningPhaseCheck();
-            }
-
 
             if (gameState == GameState.Distractor)
                 DistractorPhaseCheck();
@@ -182,10 +191,10 @@ namespace SpatialMemoryTest
             localEachDistractorReactTime = eachDistractorReactTime;
 
             // change trial conditions based on trial number
-            layout = GetCurrentCardsLayout();
-            PEDependence = GetCurrentPEDependence();
+            furnitureCon = GetCurrentFurnitureCondition();
+            alignmentCon = GetCurrentAlignmentCondition();
             
-            if (layout != Layout.NULL && PEDependence != PhysicalEnvironmentDependence.NULL)
+            if (furnitureCon != FurnitureCondition.NULL && alignmentCon != AlignmentCondition.NULL)
             {
                 WriteInteractionToLog("Prepare Phase");
 
@@ -218,13 +227,13 @@ namespace SpatialMemoryTest
 
                 patternCards = GenerateCards();
 
-                SetCardsPositions(patternCards, layout);
+                SetCardsPositionsAndRotations(patternCards);
 
                 foreach (GameObject card in patternCards)
                     card.SetActive(false);
             }
             else
-                Debug.LogError("layout error! Cannot get current layout.");
+                Debug.LogError("condition error! Cannot get current condition.");
         }
         #endregion
 
@@ -250,22 +259,11 @@ namespace SpatialMemoryTest
                     card.transform.localScale = new Vector3(cardSize, cardSize, 1);
 
                     // assign position
-                    card.transform.localPosition = SetCardPosition(index, i, j);
+                    card.transform.localPosition = Vector3.zero;
 
                     // assign orientation
-                    card.transform.localEulerAngles = new Vector3(0, card.transform.localEulerAngles.y, 0);
-                    if (layout == Layout.Wraparound)
-                    {
-                        GameObject center = new GameObject();
-                        center.transform.SetParent(transform);
-                        center.transform.localPosition = card.transform.localPosition;
-                        center.transform.localPosition = new Vector3(0, center.transform.localPosition.y, 0);
+                    card.transform.localEulerAngles = Vector3.zero;
 
-                        card.transform.LookAt(center.transform.position);
-
-                        card.transform.localEulerAngles += Vector3.up * 180;
-                        Destroy(center);
-                    }
                     patternCards.Add(card);
 
                     k++;
@@ -287,88 +285,33 @@ namespace SpatialMemoryTest
             return patternCards;
         }
 
-        // Set patternCards Positions based on current layout
-        private void SetCardsPositions(List<GameObject> localCards, Layout localLayout)
+        // Set patternCards Positions based on current conditions
+        private void SetCardsPositionsAndRotations(List<GameObject> localCards)
         {
-            for (int i = 0; i < numberOfRows; i++)
-            {
-                for (int j = 0; j < numberOfColumns; j++)
-                {
-                    int index = i * numberOfColumns + j;
-                    localCards[index].transform.localPosition = SetCardPosition(index, i, j);
-
-                    localCards[index].transform.localEulerAngles = new Vector3(0, localCards[index].transform.localEulerAngles.y, 0);
-
-                    if (localLayout == Layout.Flat)
-                        localCards[index].transform.localEulerAngles = new Vector3(0, 0, 0);
-                    else if (localLayout == Layout.Wraparound)// FULL CIRCLE
-                    {
-                        // change orientation
-                        GameObject center = new GameObject();
-                        center.transform.SetParent(this.transform);
-                        center.transform.localPosition = localCards[index].transform.localPosition;
-                        center.transform.localPosition = new Vector3(0, center.transform.localPosition.y, 0);
-
-                        localCards[index].transform.LookAt(center.transform.position);
-
-                        localCards[index].transform.localEulerAngles += Vector3.up * 180;
-                        Destroy(center);
-                    }
-                }
-            }
-        }
-
-        private void SetGridPosition(Layout localLayout) {
-            switch (localLayout)
-            {
-                case Layout.Flat:
-
-                    transform.position = new Vector3(0, adjustedHeight, 1);
-                    transform.LookAt(Camera.main.transform.position);
-                    transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
-
-                    DistractorTask.position = new Vector3(0, adjustedHeight, 0.5f);
-                    DistractorTask.LookAt(Camera.main.transform.position);
-                    DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
-                    break;
-                case Layout.Wraparound:
-                    transform.position = new Vector3(0, adjustedHeight, 0);
-                    transform.LookAt(Camera.main.transform.position);
-                    transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y + 180, 0);
-
-                    DistractorTask.position = new Vector3(0, adjustedHeight, 0.5f);
-                    DistractorTask.LookAt(Camera.main.transform.position);
-                    DistractorTask.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);
-                    break;
-                default:
-                    break;
+            for (int index = 0; index < 36; index++) {
+                localCards[index].transform.localPosition = SetCardPosition(index);
+                localCards[index].transform.localEulerAngles = SetCardRotation(index);
             }
         }
 
         // Set Card Position
-        private Vector3 SetCardPosition(int index, int row, int col)
+        private Vector3 SetCardPosition(int index)
         {
-            float xValue = 0;
-            float yValue = 0;
-            float zValue = 0;
+            int columnNo = index % 12;
 
-            switch (layout)
-            {
-                case Layout.Flat:
-                    xValue = (index - (row * numberOfColumns) - (numberOfColumns / 2.0f - 0.5f)) * hDelta;
-                    yValue = (numberOfRows - (row + 1)) * vDelta;
-                    zValue = 0;
-                    break;
-                case Layout.Wraparound:
-                    xValue = -Mathf.Cos((index - (row * numberOfColumns)) * Mathf.PI / (numberOfColumns / 2.0f)) * ((numberOfColumns - 1) * hDelta / (2.0f * Mathf.PI));
-                    yValue = (numberOfRows - (row + 1)) * vDelta;
-                    zValue = Mathf.Sin((index - (row * numberOfColumns)) * Mathf.PI / (numberOfColumns / 2.0f)) * ((numberOfColumns - 1) * hDelta / (2.0f * Mathf.PI));
-                    break;
-                default:
-                    break;
-            }
+            Vector3[] currentColumnPositions = GetCurrentColumnPositions();
 
-            return new Vector3(xValue, yValue, zValue);
+            return currentColumnPositions[columnNo];
+        }
+
+        // Set Card Rotation
+        private Vector3 SetCardRotation(int index)
+        {
+            int columnNo = index % 12;
+
+            Vector3[] currentColumnRotations = GetCurrentColumnRotations();
+
+            return currentColumnRotations[columnNo];
         }
         #endregion
 
@@ -500,11 +443,6 @@ namespace SpatialMemoryTest
                 if (IsCardFilled(card))
                 {
                     SetCardsColor(card.transform, Color.black);
-
-                    if (layout == Layout.Flat)
-                        card.transform.localEulerAngles = Vector3.zero;
-                    //else
-                        //card.transform.localEulerAngles += Vector3.up * 180;
 
                     card.GetComponent<Card>().selected = false;
                     card.GetComponent<Card>().rotating = false;
@@ -671,10 +609,6 @@ namespace SpatialMemoryTest
             foreach (GameObject card in patternCards) 
             {
                 SetCardsColor(card.transform, Color.black);
-                if (layout == Layout.Flat)
-                    card.transform.localEulerAngles = Vector3.zero;
-                //else
-                    //card.transform.localEulerAngles += Vector3.up * 180;
 
                 if (IsCardSelected(card))
                     SetCardsColor(card.transform, Color.white);
@@ -744,15 +678,25 @@ namespace SpatialMemoryTest
         {
             string[] lines = new string[10];
 
-            // fixed pattern 5 flat
+            // pattern of 5 cards for furniture and alignment
             lines = new string[20];
-            lines = Patterns5Flat.text.Split(lineSeperater);
-            FlatTaskList.AddRange(lines);
+            lines = Patterns_Fur_Ali.text.Split(lineSeperater);
+            Fur_Ali_TaskList.AddRange(lines);
 
-            // fixed pattern 5 flat
+            // pattern of 5 cards for furniture and no alignment
             lines = new string[20];
-            lines = Patterns5Circular.text.Split(lineSeperater);
-            CircularTaskList.AddRange(lines);
+            lines = Patterns_Fur_NotAli.text.Split(lineSeperater);
+            Fur_NotAli_TaskList.AddRange(lines);
+
+            // pattern of 5 cards for no furniture and alignment
+            lines = new string[20];
+            lines = Patterns_NoFur_Ali.text.Split(lineSeperater);
+            NoFur_Ali_TaskList.AddRange(lines);
+
+            // pattern of 5 cards for no furniture and no alignment
+            lines = new string[20];
+            lines = Patterns_NoFur_NotAli.text.Split(lineSeperater);
+            NoFur_NotAli_TaskList.AddRange(lines);
         }
 
         public int RandomNumber(int min, int max)
@@ -777,7 +721,7 @@ namespace SpatialMemoryTest
             if (rawLogger != null && Camera.main != null)
             {
                 rawLogger.AddRow(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
-                    GetLayout() + "," + GetPhysicalDependence() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
+                    GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
                 rawLogger.FlushData();
             }
         }
@@ -786,8 +730,8 @@ namespace SpatialMemoryTest
         {
             if (taskLogger != null && userSelectedPatternCards.Count != 0)
             {
-                taskLogger.AddRow(StartSceneScript.ParticipantID + "," + GetTrialNumber() + "," + GetTrialID() + "," + GetLayout() + "," +
-                    GetPhysicalDependence() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
+                taskLogger.AddRow(StartSceneScript.ParticipantID + "," + GetTrialNumber() + "," + GetTrialID() + "," + GetFurnitureCondition() + "," +
+                    GetAlignmentCondition() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
                 taskLogger.FlushData();
             }
         }
@@ -798,18 +742,18 @@ namespace SpatialMemoryTest
             {
                 if (info.Contains("seen"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                        StartSceneScript.ParticipantID + "," + GetLayout() + "," + "Card," + info.Split(' ')[0].Remove(0, 4) + ",,,");
+                        StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "Card," + info.Split(' ')[0].Remove(0, 4) + ",,,");
                 else if (info.Contains("selected"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                       StartSceneScript.ParticipantID + "," + GetLayout() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + ",,");
+                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + ",,");
                 else if (info.Contains("answered"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                       StartSceneScript.ParticipantID + "," + GetLayout() + "," + "Card,,," + info.Split(' ')[0].Remove(0, 4) + ",");
+                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "Card,,," + info.Split(' ')[0].Remove(0, 4) + ",");
                 else if (info.Contains("played"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                       StartSceneScript.ParticipantID + "," + GetLayout() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
+                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
                 else
-                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + GetLayout() + "," + info + ",,,");
+                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + info + ",,,");
             }
         }
 
@@ -898,73 +842,73 @@ namespace SpatialMemoryTest
         #endregion
 
         #region Get functions
-        // Get current patternCards layouts based on sequence
-        private Layout GetCurrentCardsLayout()
+        // Get current patternCards conditions based on sequence
+        private FurnitureCondition GetCurrentFurnitureCondition()
         {
             switch (experimentSequence)
             {
                 case 0:
                     if ((trialNo <= 6 && trialNo >= 1) || (trialNo <= 18 && trialNo >= 13))
-                        return Layout.Flat;
+                        return FurnitureCondition.HasFurniture;
                     else
-                        return Layout.Wraparound;
+                        return FurnitureCondition.NoFurniture;
                 case 1:
                     if ((trialNo <= 6 && trialNo >= 1) || (trialNo <= 18 && trialNo >= 13))
-                        return Layout.Flat;
+                        return FurnitureCondition.HasFurniture;
                     else
-                        return Layout.Wraparound;
+                        return FurnitureCondition.NoFurniture;
                 case 2:
                     if (trialNo <= 24 && trialNo >= 13)
-                        return Layout.Flat;
+                        return FurnitureCondition.HasFurniture;
                     else
-                        return Layout.Wraparound;
+                        return FurnitureCondition.NoFurniture;
                 case 3:
                     if (trialNo <= 12 && trialNo >= 1)
-                        return Layout.Flat;
+                        return FurnitureCondition.HasFurniture;
                     else
-                        return Layout.Wraparound;
+                        return FurnitureCondition.NoFurniture;
                 case 4:
                     if ((trialNo <= 12 && trialNo >= 7) || (trialNo <= 24 && trialNo >= 19))
-                        return Layout.Flat;
+                        return FurnitureCondition.HasFurniture;
                     else
-                        return Layout.Wraparound;
+                        return FurnitureCondition.NoFurniture;
                 default:
-                    return Layout.NULL;
+                    return FurnitureCondition.NULL;
             }
         }
 
         // Get current physical environment dependence based on sequence
-        private PhysicalEnvironmentDependence GetCurrentPEDependence()
+        private AlignmentCondition GetCurrentAlignmentCondition()
         {
             switch (experimentSequence)
             {
                 case 0:
                     if (trialNo <= 12 && trialNo >= 1)
-                        return PhysicalEnvironmentDependence.Low;
+                        return AlignmentCondition.AlignWithFurniture;
                     else
-                        return PhysicalEnvironmentDependence.High;
+                        return AlignmentCondition.NotAlignWithFurniture;
                 case 1:
                     if (trialNo <= 12 && trialNo >= 1)
-                        return PhysicalEnvironmentDependence.Low;
+                        return AlignmentCondition.AlignWithFurniture;
                     else
-                        return PhysicalEnvironmentDependence.High;
+                        return AlignmentCondition.NotAlignWithFurniture;
                 case 2:
                     if ((trialNo <= 6 && trialNo >= 1) || (trialNo <= 18 && trialNo >= 13))
-                        return PhysicalEnvironmentDependence.Low;
+                        return AlignmentCondition.AlignWithFurniture;
                     else
-                        return PhysicalEnvironmentDependence.High;
+                        return AlignmentCondition.NotAlignWithFurniture;
                 case 3:
                     if ((trialNo <= 12 && trialNo >= 7) || (trialNo <= 24 && trialNo >= 19))
-                        return PhysicalEnvironmentDependence.Low;
+                        return AlignmentCondition.AlignWithFurniture;
                     else
-                        return PhysicalEnvironmentDependence.High;
+                        return AlignmentCondition.NotAlignWithFurniture;
                 case 4:
                     if (trialNo <= 24 && trialNo >= 13)
-                        return PhysicalEnvironmentDependence.Low;
+                        return AlignmentCondition.AlignWithFurniture;
                     else
-                        return PhysicalEnvironmentDependence.High;
+                        return AlignmentCondition.NotAlignWithFurniture;
                 default:
-                    return PhysicalEnvironmentDependence.NULL;
+                    return AlignmentCondition.NULL;
             }
         }
 
@@ -973,16 +917,16 @@ namespace SpatialMemoryTest
         {
             if (difficultyLevel == 5)
             {
-                if (layout == Layout.Flat)
+                if (furnitureCon == FurnitureCondition.HasFurniture && alignmentCon == AlignmentCondition.AlignWithFurniture)
                 {
-                    if (FlatTaskList.Count > 0)
+                    if (Fur_Ali_TaskList.Count > 0)
                     {
                         int[] PatternID = new int[difficultyLevel];
                         string[] PatternIDString = new string[difficultyLevel];
 
-                        PatternIDString = FlatTaskList[0].Split(fieldSeperator);
+                        PatternIDString = Fur_Ali_TaskList[0].Split(fieldSeperator);
 
-                        FlatTaskList.RemoveAt(0);
+                        Fur_Ali_TaskList.RemoveAt(0);
 
                         for (int i = 0; i < difficultyLevel; i++)
                         {
@@ -991,16 +935,52 @@ namespace SpatialMemoryTest
                         return PatternID;
                     }
                 }
-                else if (layout == Layout.Wraparound)
+                else if (furnitureCon == FurnitureCondition.HasFurniture && alignmentCon == AlignmentCondition.NotAlignWithFurniture)
                 {
-                    if (CircularTaskList.Count > 0)
+                    if (Fur_NotAli_TaskList.Count > 0)
                     {
                         int[] PatternID = new int[difficultyLevel];
                         string[] PatternIDString = new string[difficultyLevel];
 
-                        PatternIDString = CircularTaskList[0].Split(fieldSeperator);
+                        PatternIDString = Fur_NotAli_TaskList[0].Split(fieldSeperator);
 
-                        CircularTaskList.RemoveAt(0);
+                        Fur_NotAli_TaskList.RemoveAt(0);
+
+                        for (int i = 0; i < difficultyLevel; i++)
+                        {
+                            PatternID[i] = int.Parse(PatternIDString[i]);
+                        }
+                        return PatternID;
+                    }
+                }
+                else if (furnitureCon == FurnitureCondition.NoFurniture && alignmentCon == AlignmentCondition.AlignWithFurniture)
+                {
+                    if (NoFur_Ali_TaskList.Count > 0)
+                    {
+                        int[] PatternID = new int[difficultyLevel];
+                        string[] PatternIDString = new string[difficultyLevel];
+
+                        PatternIDString = NoFur_Ali_TaskList[0].Split(fieldSeperator);
+
+                        NoFur_Ali_TaskList.RemoveAt(0);
+
+                        for (int i = 0; i < difficultyLevel; i++)
+                        {
+                            PatternID[i] = int.Parse(PatternIDString[i]);
+                        }
+                        return PatternID;
+                    }
+                }
+                else if (furnitureCon == FurnitureCondition.NoFurniture && alignmentCon == AlignmentCondition.NotAlignWithFurniture)
+                {
+                    if (NoFur_NotAli_TaskList.Count > 0)
+                    {
+                        int[] PatternID = new int[difficultyLevel];
+                        string[] PatternIDString = new string[difficultyLevel];
+
+                        PatternIDString = NoFur_NotAli_TaskList[0].Split(fieldSeperator);
+
+                        NoFur_NotAli_TaskList.RemoveAt(0);
 
                         for (int i = 0; i < difficultyLevel; i++)
                         {
@@ -1011,6 +991,50 @@ namespace SpatialMemoryTest
                 }
             }
             return null;
+        }
+
+        private Vector3[] GetCurrentColumnPositions() {
+            Vector3[] columnPositions = new Vector3[12];
+            string[] lines = new string[12];
+
+            if (alignmentCon == AlignmentCondition.AlignWithFurniture)
+                lines = AlignmentColumnPositions.text.Split(lineSeperater);
+            else
+                lines = NotAlignmentColumnPositions.text.Split(lineSeperater);
+
+            for (int i = 0; i < 12; i++)
+            {
+                string[] vectorString = new string[3];
+                vectorString = lines[i].Split(fieldSeperator);
+
+                Vector3 vectorValue = new Vector3(float.Parse(vectorString[0]), float.Parse(vectorString[1]), float.Parse(vectorString[2]));
+                columnPositions[i] = vectorValue;
+            }
+
+            return columnPositions;
+        }
+
+        private Vector3[] GetCurrentColumnRotations()
+        {
+            Vector3[] columnRotations = new Vector3[12];
+
+            string[] lines = new string[12];
+
+            if (alignmentCon == AlignmentCondition.AlignWithFurniture)
+                lines = AlignmentColumnRotations.text.Split(lineSeperater);
+            else
+                lines = NotAlignmentColumnRotations.text.Split(lineSeperater);
+
+            for (int i = 0; i < 12; i++)
+            {
+                string[] vectorString = new string[3];
+                vectorString = lines[i].Split(fieldSeperator);
+
+                Vector3 vectorValue = new Vector3(float.Parse(vectorString[0]), float.Parse(vectorString[1]), float.Parse(vectorString[2]));
+                columnRotations[i] = vectorValue;
+            }
+
+            return columnRotations;
         }
 
         float GetFixedTime()
@@ -1057,28 +1081,28 @@ namespace SpatialMemoryTest
             }
         }
 
-        // Get current patternCards layouts based on sequence
-        private string GetLayout()
+        // Get current patternCards conditions based on sequence
+        private string GetFurnitureCondition()
         {
-            switch (layout)
+            switch (furnitureCon)
             {
-                case Layout.Flat:
-                    return "Flat";
-                case Layout.Wraparound:
-                    return "Wraparound";
+                case FurnitureCondition.HasFurniture:
+                    return "HasFurniture";
+                case FurnitureCondition.NoFurniture:
+                    return "NoFurniture";
                 default:
                     return "NULL";
             }
         }
 
-        private string GetPhysicalDependence()
+        private string GetAlignmentCondition()
         {
-            switch (PEDependence)
+            switch (alignmentCon)
             {
-                case PhysicalEnvironmentDependence.High:
-                    return "High Dependence";
-                case PhysicalEnvironmentDependence.Low:
-                    return "Low Dependence";
+                case AlignmentCondition.AlignWithFurniture:
+                    return "AlignWithFurniture";
+                case AlignmentCondition.NotAlignWithFurniture:
+                    return "NotAlignWithFurniture";
                 default:
                     return "NULL";
             }
