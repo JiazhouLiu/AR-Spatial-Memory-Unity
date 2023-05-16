@@ -8,10 +8,7 @@ namespace Microsoft.MixedReality.SampleQRCodes
 {
     public class QRCodesVisualizer : MonoBehaviour
     {
-        //public GameObject qrCodePrefab;
-        public GameObject environment;
-        public GameObject experimentManager;
-        public GameObject QRCodeCalibrator;
+        public GameObject qrCodePrefab;
 
         private SortedDictionary<System.Guid, GameObject> qrCodesObjectsList;
         private bool clearExisting = false;
@@ -46,10 +43,10 @@ namespace Microsoft.MixedReality.SampleQRCodes
             QRCodesManager.Instance.QRCodeAdded += Instance_QRCodeAdded;
             QRCodesManager.Instance.QRCodeUpdated += Instance_QRCodeUpdated;
             QRCodesManager.Instance.QRCodeRemoved += Instance_QRCodeRemoved;
-            //if (qrCodePrefab == null)
-            //{
-            //    throw new System.Exception("Prefab not assigned");
-            //}
+            if (qrCodePrefab == null)
+            {
+                throw new System.Exception("Prefab not assigned");
+            }
         }
         private void Instance_QRCodesTrackingStateChanged(object sender, bool status)
         {
@@ -98,33 +95,18 @@ namespace Microsoft.MixedReality.SampleQRCodes
                     var action = pendingActions.Dequeue();
                     if (action.type == ActionData.Type.Added)
                     {
-                        GameObject qrCodeObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        qrCodeObject.transform.position = new Vector3(0, 0, 0);
-                        qrCodeObject.transform.rotation = Quaternion.identity;
-                        qrCodeObject.transform.localScale = new Vector3(0.1f,0.1f,0.1f);
-                        
-                        Vector3 positionOffset = Vector3.zero;
-                        positionOffset = QRCodeCalibrator.transform.position - qrCodeObject.transform.position;
-                        Debug.Log("position offset: " + positionOffset);
-
-                        Vector3 rotationOffset = Vector3.zero;
-                        rotationOffset = QRCodeCalibrator.transform.localEulerAngles - qrCodeObject.transform.localEulerAngles;
-                        Debug.Log("rotation offset: " + rotationOffset);
-
-                        //qrCodeObject.GetComponent<SpatialGraphNodeTracker>().Id = action.qrCode.SpatialGraphNodeId;
-                        //qrCodeObject.GetComponent<QRCode>().qrCode = action.qrCode;
+                        GameObject qrCodeObject = Instantiate(qrCodePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                        qrCodeObject.GetComponent<SpatialGraphNodeTracker>().Id = action.qrCode.SpatialGraphNodeId;
+                        qrCodeObject.GetComponent<QRCode>().qrCode = action.qrCode;
                         qrCodesObjectsList.Add(action.qrCode.Id, qrCodeObject);
                     }
                     else if (action.type == ActionData.Type.Updated)
                     {
                         if (!qrCodesObjectsList.ContainsKey(action.qrCode.Id))
                         {
-                            GameObject qrCodeObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            qrCodeObject.transform.position = new Vector3(0, 0, 0);
-                            qrCodeObject.transform.rotation = Quaternion.identity;
-                            qrCodeObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-                            //qrCodeObject.GetComponent<SpatialGraphNodeTracker>().Id = action.qrCode.SpatialGraphNodeId;
-                            //qrCodeObject.GetComponent<QRCode>().qrCode = action.qrCode;
+                            GameObject qrCodeObject = Instantiate(qrCodePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                            qrCodeObject.GetComponent<SpatialGraphNodeTracker>().Id = action.qrCode.SpatialGraphNodeId;
+                            qrCodeObject.GetComponent<QRCode>().qrCode = action.qrCode;
                             qrCodesObjectsList.Add(action.qrCode.Id, qrCodeObject);
                         }
                     }
