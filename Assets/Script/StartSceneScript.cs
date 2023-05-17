@@ -36,6 +36,7 @@ namespace SpatialMemoryTest
         public Transform MemoryTask;
         public GameObject HandMenu;
         public GameObject SetupMenu;
+        public Transform WorldRig;
 
         [Header("Experiment Parameter")]
         public GameState gameState = GameState.NULL;
@@ -79,6 +80,8 @@ namespace SpatialMemoryTest
         // Start is called before the first frame update
         void Start()
         {
+            WorldRig.transform.position -= Vector3.up * 1.7f;
+
             // initialise pattern task cards into list
             cardLists = new List<GameObject>{
                 MemoryTask.GetChild(0).gameObject,

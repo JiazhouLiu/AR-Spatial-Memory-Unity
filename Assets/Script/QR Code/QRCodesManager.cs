@@ -5,6 +5,7 @@ using Microsoft.MixedReality.QR;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Microsoft.MixedReality.SampleQRCodes
 {
@@ -31,6 +32,7 @@ namespace Microsoft.MixedReality.SampleQRCodes
     {
         [Tooltip("Determines if the QR codes scanner should be automatically started.")]
         public bool AutoStartQRTracking = true;
+        public Text description;
 
         public bool IsTrackerRunning { get; private set; }
 
@@ -111,6 +113,7 @@ namespace Microsoft.MixedReality.SampleQRCodes
             if (qrTracker != null && !IsTrackerRunning)
             {
                 Debug.Log("QRCodesManager starting QRCodeWatcher");
+                description.text += "QRCodesManager starting QRCodeWatcher" + ".\n";
                 try
                 {
                     qrTracker.Start();

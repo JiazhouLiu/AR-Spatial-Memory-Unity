@@ -123,81 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &19814246
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 327860662}
-    m_Modifications:
-    - target: {fileID: 1200717071578424, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_Name
-      value: QRCode
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114949354355283862, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: WorldGrid
-      value: 
-      objectReference: {fileID: 445313669}
-    - target: {fileID: 114949354355283862, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-      propertyPath: PhysicalQRCode
-      value: 
-      objectReference: {fileID: 823457426}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
---- !u!4 &19814247 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4436408278160384, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-  m_PrefabInstance: {fileID: 19814246}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &19814248 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1200717071578424, guid: 4506430d70de79b4a827eebf47314faa, type: 3}
-  m_PrefabInstance: {fileID: 19814246}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &231753638 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5895655907575189061, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
@@ -242,7 +167,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 886341833}
-  - {fileID: 19814247}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -287,7 +211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 445313669}
   m_Layer: 0
-  m_Name: '##### World Grid #####'
+  m_Name: '##### World Rig #####'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -368,14 +292,15 @@ MonoBehaviour:
   nextButton: {fileID: 231753638}
   wellDoneButton: {fileID: 714643362}
   breakButton: {fileID: 1385050113}
+  WorldRig: {fileID: 445313669}
   Patterns_Fur_Ali: {fileID: 4900000, guid: fe3e724f75af56844b77bd8a555c28fe, type: 3}
   Patterns_Fur_NotAli: {fileID: 4900000, guid: 1424773de33471048a442b1f04daab76, type: 3}
   Patterns_NoFur_Ali: {fileID: 4900000, guid: 22481a77e92bea04ebbcf516012416ba, type: 3}
   Patterns_NoFur_NotAli: {fileID: 4900000, guid: e68471cb7826ee947a0df89a173d850e, type: 3}
-  AlignmentColumnPositions: {fileID: 4900000, guid: 045b7dbf69d24da40ba03738b3a3416a, type: 3}
-  NotAlignmentColumnPositions: {fileID: 4900000, guid: 97ce5ac67255f2f4899444d3a97d3223, type: 3}
-  AlignmentColumnRotations: {fileID: 4900000, guid: c4f37d1d185ec334a8eb974b1618b1c1, type: 3}
-  NotAlignmentColumnRotations: {fileID: 4900000, guid: d28b978b7af6a434e92cd9cb5b311e2a, type: 3}
+  AlignmentColumnPositions: {fileID: 4900000, guid: 36ade3e7ddc862949961c4f6b8464d97, type: 3}
+  NotAlignmentColumnPositions: {fileID: 4900000, guid: 36ade3e7ddc862949961c4f6b8464d97, type: 3}
+  AlignmentColumnRotations: {fileID: 4900000, guid: 402d8533bf1e6d449ab031fba8b90210, type: 3}
+  NotAlignmentColumnRotations: {fileID: 4900000, guid: 402d8533bf1e6d449ab031fba8b90210, type: 3}
   GameTask: {fileID: 4900000, guid: d97af0e7a0a7d414ab438ae212497150, type: 3}
   hDelta: 0.5
   vDelta: 0.4
@@ -463,11 +388,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3818831777330892169, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
   m_PrefabInstance: {fileID: 823457424}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &823457426 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3818831777330892168, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-  m_PrefabInstance: {fileID: 823457424}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &823457427 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
@@ -531,7 +451,7 @@ PrefabInstance:
     - target: {fileID: 5731539863259288648, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
       propertyPath: qrCodePrefab
       value: 
-      objectReference: {fileID: 19814248}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
 --- !u!4 &886341833 stripped
@@ -974,7 +894,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b37cd175f9216164880ffef5d0627744, type: 2}
     - target: {fileID: 5361480710540427119, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}
       propertyPath: m_Name
-      value: MixedRealityToolkit
+      value: MixedRealityToolkit (Inactive)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}

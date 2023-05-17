@@ -12,8 +12,8 @@ namespace Microsoft.MixedReality.SampleQRCodes
         public Microsoft.MixedReality.QR.QRCode qrCode;
         private GameObject qrCodeCube;
 
-        public Transform WorldGrid;
-        public Transform PhysicalQRCode;
+        private Transform WorldRig;
+        private Transform PhysicalQRCode;
 
         public float PhysicalSize { get; private set; }
         //public string CodeText { get; private set; }
@@ -41,6 +41,9 @@ namespace Microsoft.MixedReality.SampleQRCodes
             }
 
             PhysicalSize = qrCode.PhysicalSideLength;
+
+            WorldRig = GameObject.Find("##### World Rig #####").transform;
+            PhysicalQRCode = GameObject.Find("Physical QR Code").transform;
             //CodeText = qrCode.Data;
 
             //qrCodeCube = gameObject.transform.Find("Cube").gameObject;
@@ -86,11 +89,11 @@ namespace Microsoft.MixedReality.SampleQRCodes
                 lastTimeStamp = qrCode.SystemRelativeLastDetectedTime.Ticks;
                 //QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
 
-                //Vector3 positionDiff = PhysicalQRCode.position - qrCodeCube.transform.position;
-                //Vector3 rotationDiff = PhysicalQRCode.localEulerAngles - qrCodeCube.transform.localEulerAngles;
+                Vector3 positionDiff = PhysicalQRCode.position - qrCodeCube.transform.position;
+                Vector3 rotationDiff = PhysicalQRCode.localEulerAngles - qrCodeCube.transform.localEulerAngles;
 
-                //WorldGrid.position += positionDiff;
-                //WorldGrid.localEulerAngles += rotationDiff;
+                WorldRig.position += positionDiff;
+                WorldRig.localEulerAngles += rotationDiff;
             }
         }
 
@@ -105,13 +108,13 @@ namespace Microsoft.MixedReality.SampleQRCodes
             //}
         }
 
-        void LaunchUri()
-        {
-#if WINDOWS_UWP
-            // Launch the URI
-            UnityEngine.WSA.Launcher.LaunchUri(uriResult.ToString(), true);
-#endif
-        }
+//        void LaunchUri()
+//        {
+//#if WINDOWS_UWP
+//            // Launch the URI
+//            UnityEngine.WSA.Launcher.LaunchUri(uriResult.ToString(), true);
+//#endif
+//        }
 
         void IMixedRealityPointerHandler.OnPointerDown(MixedRealityPointerEventData eventData) { }
 

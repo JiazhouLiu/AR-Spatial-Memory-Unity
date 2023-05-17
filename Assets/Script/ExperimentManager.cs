@@ -24,6 +24,7 @@ namespace SpatialMemoryTest
         public GameObject nextButton;
         public GameObject wellDoneButton;
         public GameObject breakButton;
+        public Transform WorldRig;
 
         [Header("Task File")]
         public TextAsset Patterns_Fur_Ali;
@@ -124,6 +125,7 @@ namespace SpatialMemoryTest
 
             // load pattern task
             LoadPatterns();
+            WorldRig.transform.position -= Vector3.up * 1.7f;
 
             // add distractor task cards into list
             foreach (Transform t in DistractorTask)
@@ -298,10 +300,11 @@ namespace SpatialMemoryTest
         private Vector3 SetCardPosition(int index)
         {
             int columnNo = index % 12;
+            int rowNo = index / 12;
 
             Vector3[] currentColumnPositions = GetCurrentColumnPositions();
 
-            return currentColumnPositions[columnNo];
+            return currentColumnPositions[columnNo] + Vector3.up * rowNo * vDelta;
         }
 
         // Set Card Rotation
