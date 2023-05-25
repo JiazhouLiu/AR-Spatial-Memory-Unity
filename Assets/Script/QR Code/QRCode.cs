@@ -3,6 +3,7 @@
 
 using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Microsoft.MixedReality.SampleQRCodes
 {
@@ -14,62 +15,75 @@ namespace Microsoft.MixedReality.SampleQRCodes
 
         private Transform WorldRig;
         private Transform PhysicalQRCode;
+        private Text testingText;
 
         public float PhysicalSize { get; private set; }
-        //public string CodeText { get; private set; }
+        public string CodeText { get; private set; }
 
-        //private TextMesh QRID;
-        //private TextMesh QRNodeID;
-        //private TextMesh QRText;
-        //private TextMesh QRVersion;
-        //private TextMesh QRTimeStamp;
-        //private TextMesh QRSize;
-        //private GameObject QRInfo;
-        //private bool validURI = false;
-        //private bool launch = false;
-        //private System.Uri uriResult;
+        private TextMesh QRID;
+        private TextMesh QRNodeID;
+        private TextMesh QRText;
+        private TextMesh QRVersion;
+        private TextMesh QRTimeStamp;
+        private TextMesh QRSize;
+        private GameObject QRInfo;
+        private bool validURI = false;
+        private bool launch = false;
+        private System.Uri uriResult;
         private long lastTimeStamp = 0;
 
         // Use this for initialization
         void Start()
         {
+            testingText = GameObject.Find("TestingText").GetComponent<Text>();
+
+            if (testingText != null)
+                testingText.text += "Found text box!\n";
+
             PhysicalSize = 0.1f;
-            //CodeText = "Dummy";
+            CodeText = "Dummy";
             if (qrCode == null)
             {
+                testingText.text += "QR Code Empty.\n";
                 throw new System.Exception("QR Code Empty");
             }
 
             PhysicalSize = qrCode.PhysicalSideLength;
 
             WorldRig = GameObject.Find("##### World Rig #####").transform;
+            //if (WorldRig != null)
+            //    testingText.text += "Found World Rig!\n";
+
             PhysicalQRCode = GameObject.Find("Physical QR Code").transform;
-            //CodeText = qrCode.Data;
+            //if (PhysicalQRCode != null)
+            //    testingText.text += "Found Physical QR Code!\n";
 
-            //qrCodeCube = gameObject.transform.Find("Cube").gameObject;
-            //QRInfo = gameObject.transform.Find("QRInfo").gameObject;
-            //QRID = QRInfo.transform.Find("QRID").gameObject.GetComponent<TextMesh>();
-            //QRNodeID = QRInfo.transform.Find("QRNodeID").gameObject.GetComponent<TextMesh>();
-            //QRText = QRInfo.transform.Find("QRText").gameObject.GetComponent<TextMesh>();
-            //QRVersion = QRInfo.transform.Find("QRVersion").gameObject.GetComponent<TextMesh>();
-            //QRTimeStamp = QRInfo.transform.Find("QRTimeStamp").gameObject.GetComponent<TextMesh>();
-            //QRSize = QRInfo.transform.Find("QRSize").gameObject.GetComponent<TextMesh>();
+            CodeText = qrCode.Data;
 
-            //QRID.text = "Id:" + qrCode.Id.ToString();
-            //QRNodeID.text = "NodeId:" + qrCode.SpatialGraphNodeId.ToString();
-            //QRText.text = CodeText;
+            qrCodeCube = gameObject.transform.Find("Cube").gameObject;
+            QRInfo = gameObject.transform.Find("QRInfo").gameObject;
+            QRID = QRInfo.transform.Find("QRID").gameObject.GetComponent<TextMesh>();
+            QRNodeID = QRInfo.transform.Find("QRNodeID").gameObject.GetComponent<TextMesh>();
+            QRText = QRInfo.transform.Find("QRText").gameObject.GetComponent<TextMesh>();
+            QRVersion = QRInfo.transform.Find("QRVersion").gameObject.GetComponent<TextMesh>();
+            QRTimeStamp = QRInfo.transform.Find("QRTimeStamp").gameObject.GetComponent<TextMesh>();
+            QRSize = QRInfo.transform.Find("QRSize").gameObject.GetComponent<TextMesh>();
 
-            //if (System.Uri.TryCreate(CodeText, System.UriKind.Absolute, out uriResult))
-            //{
-            //    validURI = true;
-            //    QRText.color = Color.blue;
-            //}
+            QRID.text = "Id:" + qrCode.Id.ToString();
+            QRNodeID.text = "NodeId:" + qrCode.SpatialGraphNodeId.ToString();
+            QRText.text = CodeText;
 
-            //QRVersion.text = "Ver: " + qrCode.Version;
-            //QRSize.text = "Size:" + qrCode.PhysicalSideLength.ToString("F04") + "m";
-            //QRTimeStamp.text = "Time:" + qrCode.LastDetectedTime.ToString("MM/dd/yyyy HH:mm:ss.fff");
-            //QRTimeStamp.color = Color.yellow;
-            //Debug.Log("Id= " + qrCode.Id + "NodeId= " + qrCode.SpatialGraphNodeId + " PhysicalSize = " + PhysicalSize + " TimeStamp = " + qrCode.SystemRelativeLastDetectedTime.Ticks + " QRVersion = " + qrCode.Version + " QRData = " + CodeText);
+            if (System.Uri.TryCreate(CodeText, System.UriKind.Absolute, out uriResult))
+            {
+                validURI = true;
+                QRText.color = Color.blue;
+            }
+
+            QRVersion.text = "Ver: " + qrCode.Version;
+            QRSize.text = "Size:" + qrCode.PhysicalSideLength.ToString("F04") + "m";
+            QRTimeStamp.text = "Time:" + qrCode.LastDetectedTime.ToString("MM/dd/yyyy HH:mm:ss.fff");
+            QRTimeStamp.color = Color.yellow;
+            Debug.Log("Id= " + qrCode.Id + "NodeId= " + qrCode.SpatialGraphNodeId + " PhysicalSize = " + PhysicalSize + " TimeStamp = " + qrCode.SystemRelativeLastDetectedTime.Ticks + " QRVersion = " + qrCode.Version + " QRData = " + CodeText);
         }
 
         void UpdatePropertiesDisplay()
@@ -77,23 +91,31 @@ namespace Microsoft.MixedReality.SampleQRCodes
             // Update properties that change
             if (qrCode != null && lastTimeStamp != qrCode.SystemRelativeLastDetectedTime.Ticks)
             {
-                //QRSize.text = "Size:" + qrCode.PhysicalSideLength.ToString("F04") + "m";
+                QRSize.text = "Size:" + qrCode.PhysicalSideLength.ToString("F04") + "m";
 
-                //QRTimeStamp.text = "Time:" + qrCode.LastDetectedTime.ToString("MM/dd/yyyy HH:mm:ss.fff");
-                //QRTimeStamp.color = QRTimeStamp.color == Color.yellow ? Color.white : Color.yellow;
+                QRTimeStamp.text = "Time:" + qrCode.LastDetectedTime.ToString("MM/dd/yyyy HH:mm:ss.fff");
+                QRTimeStamp.color = QRTimeStamp.color == Color.yellow ? Color.white : Color.yellow;
                 PhysicalSize = qrCode.PhysicalSideLength;
                 Debug.Log("Id= " + qrCode.Id + "NodeId= " + qrCode.SpatialGraphNodeId + " PhysicalSize = " + PhysicalSize + " TimeStamp = " + qrCode.SystemRelativeLastDetectedTime.Ticks + " Time = " + qrCode.LastDetectedTime.ToString("MM/dd/yyyy HH:mm:ss.fff"));
 
                 qrCodeCube.transform.localPosition = new Vector3(PhysicalSize / 2.0f, PhysicalSize / 2.0f, 0.0f);
                 qrCodeCube.transform.localScale = new Vector3(PhysicalSize, PhysicalSize, 0.005f);
                 lastTimeStamp = qrCode.SystemRelativeLastDetectedTime.Ticks;
-                //QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
+                QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
 
-                Vector3 positionDiff = PhysicalQRCode.position - qrCodeCube.transform.position;
-                Vector3 rotationDiff = PhysicalQRCode.localEulerAngles - qrCodeCube.transform.localEulerAngles;
+                Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
+                Vector3 rotationDiff = qrCodeCube.transform.localEulerAngles - PhysicalQRCode.localEulerAngles;
+
+                if (testingText != null)
+                {
+                    testingText.text += "Position: " + qrCodeCube.transform.position + "\n";
+                }
 
                 WorldRig.position += positionDiff;
                 WorldRig.localEulerAngles += rotationDiff;
+
+                //if (testingText != null)
+                //    testingText.text += "After WorldRig position: " + WorldRig.position + "\n";
             }
         }
 
@@ -101,20 +123,20 @@ namespace Microsoft.MixedReality.SampleQRCodes
         void Update()
         {
             UpdatePropertiesDisplay();
-            //if (launch)
-            //{
-            //    launch = false;
-            //    LaunchUri();
-            //}
+            if (launch)
+            {
+                launch = false;
+                LaunchUri();
+            }
         }
 
-//        void LaunchUri()
-//        {
-//#if WINDOWS_UWP
-//            // Launch the URI
-//            UnityEngine.WSA.Launcher.LaunchUri(uriResult.ToString(), true);
-//#endif
-//        }
+        void LaunchUri()
+        {
+#if WINDOWS_UWP
+            // Launch the URI
+            UnityEngine.WSA.Launcher.LaunchUri(uriResult.ToString(), true);
+#endif
+        }
 
         void IMixedRealityPointerHandler.OnPointerDown(MixedRealityPointerEventData eventData) { }
 
@@ -124,11 +146,11 @@ namespace Microsoft.MixedReality.SampleQRCodes
 
         void IMixedRealityPointerHandler.OnPointerClicked(MixedRealityPointerEventData eventData)
         {
-            //if (validURI)
-            //{
-            //    launch = true;
-            //}
-            // eventData.Use(); // Mark the event as used, so it doesn't fall through to other handlers.
+            if (validURI)
+            {
+                launch = true;
+            }
+            //eventData.Use(); // Mark the event as used, so it doesn't fall through to other handlers.
         }
     }
 }

@@ -113,7 +113,8 @@ namespace Microsoft.MixedReality.SampleQRCodes
             if (qrTracker != null && !IsTrackerRunning)
             {
                 Debug.Log("QRCodesManager starting QRCodeWatcher");
-                description.text += "QRCodesManager starting QRCodeWatcher" + ".\n";
+                if (description != null)
+                    description.text += "QRCodesManager starting QRCodeWatcher" + ".\n";
                 try
                 {
                     qrTracker.Start();

@@ -13,10 +13,4 @@ MonoBehaviour:
   m_Name: CustomMixedRealityRegisteredServiceProvidersProfile
   m_EditorClassIdentifier: 
   isCustomProfile: 1
-  configurations:
-  - componentType:
-      reference: 
-    componentName: New Configuration 0
-    priority: 10
-    runtimePlatform: -1
-    configurationProfile: {fileID: 0}
+  configurations: []

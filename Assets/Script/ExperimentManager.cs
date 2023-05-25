@@ -125,14 +125,14 @@ namespace SpatialMemoryTest
 
             // load pattern task
             LoadPatterns();
-            WorldRig.transform.position -= Vector3.up * 1.7f;
+            WorldRig.transform.position -= Vector3.up * 1.8f;
 
             // add distractor task cards into list
             foreach (Transform t in DistractorTask)
                 distractorCards.Add(t.gameObject);
 
             // setup adjusted height
-            adjustedHeight = Camera.main.transform.position.y - 0.5f;
+            adjustedHeight = Camera.main.transform.position.y - 0.8f;
 
             if (GameObject.Find("MainExperimentManager") != null)
             {
@@ -203,7 +203,7 @@ namespace SpatialMemoryTest
                 if (GetTrialID() == "Training")
                     Instruction.text = "Training Task.\n\n Press the Start button when you are ready.";
                 else
-                    Instruction.text = "Experiment Task: " + GetTrialID() + " / 16.\n\n Press the Start button when you are ready.";
+                    Instruction.text = "Experiment Task: " + GetTrialID() + " / 16.\n\n Press the Start button when you are ready. ";
 
                 if (patternCards != null)
                 {
@@ -301,9 +301,9 @@ namespace SpatialMemoryTest
         {
             int columnNo = index % 12;
             int rowNo = index / 12;
+            
 
             Vector3[] currentColumnPositions = GetCurrentColumnPositions();
-
             return currentColumnPositions[columnNo] + Vector3.up * rowNo * vDelta;
         }
 
@@ -1057,12 +1057,16 @@ namespace SpatialMemoryTest
 
         private string GetTrialID()
         {
-            if ((trialNo - 1) % 6 == 0)
+            //if ((trialNo - 1) % 6 == 0)
+            //    return "Training";
+            //else { 
+            //    int tmp = (trialNo - 1) / 6;
+            //    return (trialNo - 1 - tmp) + "";
+            //} 
+            if (trialNo == 1 || trialNo == 2)
                 return "Training";
-            else { 
-                int tmp = (trialNo - 1) / 6;
-                return (trialNo - 1 - tmp) + "";
-            } 
+            else
+                return (trialNo - 2) + "";
         }
 
         private string GetGameState()

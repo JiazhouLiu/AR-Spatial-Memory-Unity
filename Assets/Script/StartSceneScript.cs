@@ -74,13 +74,13 @@ namespace SpatialMemoryTest
 
         void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(transform.root.gameObject);
         }
 
         // Start is called before the first frame update
         void Start()
         {
-            WorldRig.transform.position -= Vector3.up * 1.7f;
+            WorldRig.transform.position -= Vector3.up * 1.8f;
 
             // initialise pattern task cards into list
             cardLists = new List<GameObject>{
@@ -288,6 +288,17 @@ namespace SpatialMemoryTest
                     }
                     #endregion
                 }
+                if (Input.GetKeyDown("n"))
+                {
+                    Destroy(transform.parent.GetChild(1).gameObject);
+                    Destroy(transform.parent.GetChild(2).gameObject);
+                    Destroy(transform.parent.GetChild(3).gameObject);
+                    SceneManager.LoadScene("Experiment", LoadSceneMode.Single);
+                }
+                if (Input.GetKeyDown("w"))
+                {
+                    WorldRig.position += Vector3.forward * 0.1f;
+                }
             }
         }
 
@@ -485,6 +496,9 @@ namespace SpatialMemoryTest
 
         public void StartButtonPressed()
         {
+            Destroy(transform.parent.GetChild(1).gameObject);
+            Destroy(transform.parent.GetChild(2).gameObject);
+            Destroy(transform.parent.GetChild(3).gameObject);
             SceneManager.LoadScene("Experiment", LoadSceneMode.Single);
         }
 
