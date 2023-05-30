@@ -3,7 +3,6 @@
 
 using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Microsoft.MixedReality.SampleQRCodes
 {
@@ -15,7 +14,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
 
         private Transform WorldRig;
         private Transform PhysicalQRCode;
-        private Text testingText;
 
         public float PhysicalSize { get; private set; }
         public string CodeText { get; private set; }
@@ -35,28 +33,18 @@ namespace Microsoft.MixedReality.SampleQRCodes
         // Use this for initialization
         void Start()
         {
-            testingText = GameObject.Find("TestingText").GetComponent<Text>();
-
-            if (testingText != null)
-                testingText.text += "Found text box!\n";
 
             PhysicalSize = 0.1f;
             CodeText = "Dummy";
             if (qrCode == null)
             {
-                testingText.text += "QR Code Empty.\n";
                 throw new System.Exception("QR Code Empty");
             }
 
             PhysicalSize = qrCode.PhysicalSideLength;
 
             WorldRig = GameObject.Find("##### World Rig #####").transform;
-            //if (WorldRig != null)
-            //    testingText.text += "Found World Rig!\n";
-
             PhysicalQRCode = GameObject.Find("Physical QR Code").transform;
-            //if (PhysicalQRCode != null)
-            //    testingText.text += "Found Physical QR Code!\n";
 
             CodeText = qrCode.Data;
 
@@ -103,19 +91,13 @@ namespace Microsoft.MixedReality.SampleQRCodes
                 lastTimeStamp = qrCode.SystemRelativeLastDetectedTime.Ticks;
                 QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
 
-                Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
-                Vector3 rotationDiff = qrCodeCube.transform.localEulerAngles - PhysicalQRCode.localEulerAngles;
+                if (CodeText == "ARSpatialMemory") {
+                    Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
+                    float qrCodeYAxisRotation = qrCodeCube.transform.eulerAngles.y;
 
-                if (testingText != null)
-                {
-                    testingText.text += "Position: " + qrCodeCube.transform.position + "\n";
-                }
-
-                WorldRig.position += positionDiff;
-                WorldRig.localEulerAngles += rotationDiff;
-
-                //if (testingText != null)
-                //    testingText.text += "After WorldRig position: " + WorldRig.position + "\n";
+                    WorldRig.position += positionDiff;
+                    //WorldRig.localEulerAngles = new Vector3(0, qrCodeYAxisRotation, 0);
+                } 
             }
         }
 

@@ -80,7 +80,7 @@ namespace SpatialMemoryTest
         // Start is called before the first frame update
         void Start()
         {
-            WorldRig.transform.position -= Vector3.up * 1.8f;
+            //WorldRig.transform.position -= Vector3.up * 1.8f;
 
             // initialise pattern task cards into list
             cardLists = new List<GameObject>{

@@ -3,14 +3,12 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Microsoft.MixedReality.SampleQRCodes
 {
     public class QRCodesVisualizer : MonoBehaviour
     {
         public GameObject qrCodePrefab;
-        public Text description;
 
         private SortedDictionary<System.Guid, GameObject> qrCodesObjectsList;
         private bool clearExisting = false;
@@ -97,8 +95,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
                     var action = pendingActions.Dequeue();
                     if (action.type == ActionData.Type.Added)
                     {
-                        if (description != null)
-                            description.text += "QR Code Added. position: " + transform.position + ".\n";
                         GameObject qrCodeObject = Instantiate(qrCodePrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
                         qrCodeObject.GetComponent<SpatialGraphNodeTracker>().Id = action.qrCode.SpatialGraphNodeId;
                         qrCodeObject.GetComponent<QRCode>().qrCode = action.qrCode;
@@ -108,8 +104,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
                     {
                         if (!qrCodesObjectsList.ContainsKey(action.qrCode.Id))
                         {
-                            if(description != null)
-                                description.text += "QR Code Updated. position: " + transform.position + ".\n";
                             GameObject qrCodeObject = Instantiate(qrCodePrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
                             qrCodeObject.GetComponent<SpatialGraphNodeTracker>().Id = action.qrCode.SpatialGraphNodeId;
                             qrCodeObject.GetComponent<QRCode>().qrCode = action.qrCode;
@@ -120,8 +114,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
                     {
                         if (qrCodesObjectsList.ContainsKey(action.qrCode.Id))
                         {
-                            if (description != null)
-                                description.text += "QR Code Removed" + ".\n";
                             Destroy(qrCodesObjectsList[action.qrCode.Id]);
                             qrCodesObjectsList.Remove(action.qrCode.Id);
                         }

@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "com.microsoft.mixedreality.openxr": "file:MixedReality/com.microsoft.mixedreality.openxr-1.7.0.tgz",
     "com.microsoft.mixedreality.toolkit.examples": "file:MixedReality/com.microsoft.mixedreality.toolkit.examples-2.8.3.tgz",
     "com.microsoft.mixedreality.toolkit.extensions": "file:MixedReality/com.microsoft.mixedreality.toolkit.extensions-2.8.3.tgz",
     "com.microsoft.mixedreality.toolkit.foundation": "file:MixedReality/com.microsoft.mixedreality.toolkit.foundation-2.8.3.tgz",
@@ -15,7 +14,7 @@
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.4.8",
     "com.unity.ugui": "1.0.0",
-    "com.unity.xr.openxr": "1.6.0",
+    "com.unity.xr.windowsmr": "4.6.6",
     "com.unity.modules.ai": "1.0.0",
     "com.unity.modules.androidjni": "1.0.0",
     "com.unity.modules.animation": "1.0.0",
@@ -46,13 +45,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.microsoft.mixedreality.wlt.asa": "file:MixedReality/com.microsoft.mixedreality.wlt.asa-1.5.9.tgz",
-    "com.microsoft.azure.spatial-anchors-sdk.core": "file:MixedReality/com.microsoft.azure.spatial-anchors-sdk.core-2.13.3.tgz",
-    "com.microsoft.mixedreality.worldlockingtools": "file:MixedReality/com.microsoft.mixedreality.worldlockingtools-1.5.9.tgz",
-    "com.microsoft.azure.object-anchors.runtime": "file:MixedReality/com.microsoft.azure.object-anchors.runtime-0.25.0.tgz",
-    "com.microsoft.azure.spatial-anchors-sdk.windows": "file:MixedReality/com.microsoft.azure.spatial-anchors-sdk.windows-2.13.3.tgz",
-    "com.microsoft.mixedreality.wlt.asa.samples": "file:MixedReality/com.microsoft.mixedreality.wlt.asa.samples-1.5.9.tgz",
-    "com.microsoft.mixedreality.worldlockingsamples": "file:MixedReality/com.microsoft.mixedreality.worldlockingsamples-1.5.9.tgz"
+    "com.unity.modules.xr": "1.0.0"
   }
 }
