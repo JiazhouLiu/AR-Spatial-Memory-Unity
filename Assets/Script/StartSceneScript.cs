@@ -104,11 +104,14 @@ namespace SpatialMemoryTest
             }
 
             sp = SetupParameter.ExperimentNumber;
+
+            #region Log Related
             //RawLogger = GetComponent<RawLogger>();
             InteractionLogger = GetComponent<InteractionLogger>();
             TaskLogger = GetComponent<TaskLogger>();
             TrialCardLogger = GetComponent<TrialCardLogger>();
             AnswerCardLogger = GetComponent<AnswerCardLogger>();
+            #endregion
         }
 
         private void Update()
@@ -397,8 +400,10 @@ namespace SpatialMemoryTest
         }
 
         public void SetCalibrationPosAndRot(Vector3 position, Vector3 eulerAngle) {
-            calibratedPosition = position;
-            calibratedRotation = eulerAngle;
+            if (calibratedPosition == null && calibratedRotation == null) {
+                calibratedPosition = position;
+                calibratedRotation = eulerAngle;
+            }
         }
         #endregion
 
