@@ -3,6 +3,7 @@
 
 using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine;
+using SpatialMemoryTest;
 
 namespace Microsoft.MixedReality.SampleQRCodes
 {
@@ -95,8 +96,15 @@ namespace Microsoft.MixedReality.SampleQRCodes
                     Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
                     float qrCodeYAxisRotation = qrCodeCube.transform.eulerAngles.y;
 
+                    Vector3 rotationDiff = qrCodeCube.transform.eulerAngles - PhysicalQRCode.transform.eulerAngles;
+
                     WorldRig.position += positionDiff;
-                    //WorldRig.localEulerAngles = new Vector3(0, qrCodeYAxisRotation, 0);
+                    WorldRig.eulerAngles += rotationDiff;
+                    WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
+
+                    if (GameObject.Find("MainExperimentManager") != null) {
+                        GameObject.Find("MainExperimentManager").GetComponent<StartSceneScript>().SetCalibrationPosAndRot(WorldRig.position, WorldRig.eulerAngles);
+                    }
                 } 
             }
         }

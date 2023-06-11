@@ -18,6 +18,8 @@ namespace SpatialMemoryTest
         public static string CurrentDateTime;
         public static int PublicTrialNumber;
         public static float lastTimePast;
+        public static Vector3 calibratedPosition;
+        public static Vector3 calibratedRotation;
         #endregion
 
         #region Data Logger
@@ -392,6 +394,11 @@ namespace SpatialMemoryTest
                 t.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(true);
             else
                 t.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
+        }
+
+        public void SetCalibrationPosAndRot(Vector3 position, Vector3 eulerAngle) {
+            calibratedPosition = position;
+            calibratedRotation = eulerAngle;
         }
         #endregion
 

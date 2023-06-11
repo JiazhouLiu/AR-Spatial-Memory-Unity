@@ -125,7 +125,6 @@ namespace SpatialMemoryTest
 
             // load pattern task
             LoadPatterns();
-            WorldRig.transform.position -= Vector3.up * 1.8f;
 
             // add distractor task cards into list
             foreach (Transform t in DistractorTask)
@@ -136,6 +135,11 @@ namespace SpatialMemoryTest
 
             if (GameObject.Find("MainExperimentManager") != null)
             {
+                // update calibrated position and rotation
+                //WorldRig.transform.position -= Vector3.up * 1.8f;
+                WorldRig.transform.position = StartSceneScript.calibratedPosition;
+                WorldRig.transform.eulerAngles = StartSceneScript.calibratedRotation;
+
                 // setup experimentSequence
                 experimentSequence = StartSceneScript.ExperimentSequence;
 
