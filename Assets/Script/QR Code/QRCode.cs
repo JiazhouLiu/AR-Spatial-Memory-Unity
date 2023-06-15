@@ -92,20 +92,20 @@ namespace Microsoft.MixedReality.SampleQRCodes
                 lastTimeStamp = qrCode.SystemRelativeLastDetectedTime.Ticks;
                 QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
 
-                if (CodeText == "ARSpatialMemory") {
-                    Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
-                    float qrCodeYAxisRotation = qrCodeCube.transform.eulerAngles.y;
+                //if (CodeText == "ARSpatialMemory") {
+                //    Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
+                //    float qrCodeYAxisRotation = qrCodeCube.transform.eulerAngles.y;
 
-                    Vector3 rotationDiff = qrCodeCube.transform.eulerAngles - PhysicalQRCode.transform.eulerAngles;
+                //    Vector3 rotationDiff = qrCodeCube.transform.eulerAngles - PhysicalQRCode.transform.eulerAngles;
 
-                    WorldRig.position += positionDiff;
-                    WorldRig.eulerAngles += rotationDiff;
-                    WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
+                //    WorldRig.position += positionDiff;
+                //    WorldRig.eulerAngles += rotationDiff;
+                //    WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
 
-                    if (GameObject.Find("MainExperimentManager") != null) {
-                        GameObject.Find("MainExperimentManager").GetComponent<StartSceneScript>().SetCalibrationPosAndRot(WorldRig.position, WorldRig.eulerAngles);
-                    }
-                } 
+                //    if (GameObject.Find("MainExperimentManager") != null) {
+                //        GameObject.Find("MainExperimentManager").GetComponent<StartSceneScript>().SetCalibrationPosAndRot(WorldRig.position, WorldRig.eulerAngles);
+                //    }
+                //} 
             }
         }
 
