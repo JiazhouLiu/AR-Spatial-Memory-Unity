@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028396, g: 0.22571427, b: 0.30692327, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -139,37 +139,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &327860661
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 327860662}
-  m_Layer: 0
-  m_Name: '##### QR Code #####'
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &327860662
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 327860661}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 886341833}
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &421462194
 GameObject:
   m_ObjectHideFlags: 0
@@ -230,7 +199,6 @@ Transform:
   m_Children:
   - {fileID: 661852686}
   - {fileID: 1130929884}
-  - {fileID: 823457427}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -293,14 +261,14 @@ MonoBehaviour:
   wellDoneButton: {fileID: 714643362}
   breakButton: {fileID: 1385050113}
   WorldRig: {fileID: 445313669}
-  Patterns_Fur_Ali: {fileID: 4900000, guid: fe3e724f75af56844b77bd8a555c28fe, type: 3}
-  Patterns_Fur_NotAli: {fileID: 4900000, guid: 1424773de33471048a442b1f04daab76, type: 3}
-  Patterns_NoFur_Ali: {fileID: 4900000, guid: 22481a77e92bea04ebbcf516012416ba, type: 3}
-  Patterns_NoFur_NotAli: {fileID: 4900000, guid: e68471cb7826ee947a0df89a173d850e, type: 3}
-  AlignmentColumnPositions: {fileID: 4900000, guid: 36ade3e7ddc862949961c4f6b8464d97, type: 3}
-  NotAlignmentColumnPositions: {fileID: 4900000, guid: 36ade3e7ddc862949961c4f6b8464d97, type: 3}
-  AlignmentColumnRotations: {fileID: 4900000, guid: 402d8533bf1e6d449ab031fba8b90210, type: 3}
-  NotAlignmentColumnRotations: {fileID: 4900000, guid: 402d8533bf1e6d449ab031fba8b90210, type: 3}
+  Patterns_Fur_Reg: {fileID: 4900000, guid: 43c606aafe55bd44d964ed33216792d8, type: 3}
+  Patterns_Fur_Irr: {fileID: 4900000, guid: b3dad8131aebf924ea3f2c39117e9e94, type: 3}
+  Patterns_NoFur_Reg: {fileID: 4900000, guid: 01bc5e3c690579840a6332f6f288604e, type: 3}
+  Patterns_NoFur_Irr: {fileID: 4900000, guid: 90b643c9b8af7de4cb57c48f6fb00623, type: 3}
+  RegularColumnPositions: {fileID: 4900000, guid: 7b95efbabc6c65f4684c26ac3e5f97a7, type: 3}
+  IrregularColumnPositions: {fileID: 4900000, guid: 6ca71aedf21465f4686832858356254c, type: 3}
+  RegularColumnRotations: {fileID: 4900000, guid: a8a4566558d147e46ba52472b58d2dee, type: 3}
+  IrregularColumnRotations: {fileID: 4900000, guid: e297db2c8f604c34fb2462d590f11cc3, type: 3}
   GameTask: {fileID: 4900000, guid: d97af0e7a0a7d414ab438ae212497150, type: 3}
   hDelta: 0.5
   vDelta: 0.4
@@ -310,154 +278,13 @@ MonoBehaviour:
   eachDistractorReactTime: 5
   numberOfRows: 3
   numberOfColumns: 12
-  alignmentCon: 0
+  layoutCon: 0
   furnitureCon: 0
   gameState: 0
 --- !u!1 &714643362 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5895655907152043585, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
   m_PrefabInstance: {fileID: 5895655907286742831}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &823457424
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 445313669}
-    m_Modifications:
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3818831776968933895, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: m_Name
-      value: '##### Environment #####'
-      objectReference: {fileID: 0}
-    - target: {fileID: 8896212796882615141, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: QRCodeCalibrator
-      value: 
-      objectReference: {fileID: 823457425}
-    - target: {fileID: 8896212796882615141, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-      propertyPath: experimentManager
-      value: 
-      objectReference: {fileID: 661852685}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
---- !u!1 &823457425 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3818831777330892169, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-  m_PrefabInstance: {fileID: 823457424}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &823457427 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3818831776968933894, guid: 7a53dd00b5eea6c4282ceb36987cf366, type: 3}
-  m_PrefabInstance: {fileID: 823457424}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &886341832
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 327860662}
-    m_Modifications:
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2079062873306329133, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: m_Name
-      value: QRCodesManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5731539863259288648, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-      propertyPath: qrCodePrefab
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
---- !u!4 &886341833 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2079062873306329132, guid: 21f690b20d096d649a35c2fe01669952, type: 3}
-  m_PrefabInstance: {fileID: 886341832}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &977743936
 GameObject:
@@ -894,7 +721,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b37cd175f9216164880ffef5d0627744, type: 2}
     - target: {fileID: 5361480710540427119, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}
       propertyPath: m_Name
-      value: MixedRealityToolkit (Inactive)
+      value: MixedRealityToolkit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}

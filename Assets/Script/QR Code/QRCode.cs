@@ -12,9 +12,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
         public Microsoft.MixedReality.QR.QRCode qrCode;
         private GameObject qrCodeCube;
 
-        private Transform WorldRig;
-        private Transform PhysicalQRCode;
-
         public float PhysicalSize { get; private set; }
         public string CodeText { get; private set; }
 
@@ -42,9 +39,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
             }
 
             PhysicalSize = qrCode.PhysicalSideLength;
-
-            WorldRig = GameObject.Find("##### World Rig #####").transform;
-            PhysicalQRCode = GameObject.Find("Physical QR Code").transform;
 
             CodeText = qrCode.Data;
 
@@ -91,13 +85,8 @@ namespace Microsoft.MixedReality.SampleQRCodes
                 lastTimeStamp = qrCode.SystemRelativeLastDetectedTime.Ticks;
                 QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
 
-                if (CodeText == "ARSpatialMemory") {
-                    Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
-                    float qrCodeYAxisRotation = qrCodeCube.transform.eulerAngles.y;
-
-                    WorldRig.position += positionDiff;
-                    //WorldRig.localEulerAngles = new Vector3(0, qrCodeYAxisRotation, 0);
-                } 
+                transform.parent.GetComponent<QRCodesVisualizer>().SetCalibrationPositionAndRotation(qrCodeCube.transform.position, qrCodeCube.transform.eulerAngles);
+                Debug.Log("!!!!update" + qrCodeCube.transform.position + "; " + qrCodeCube.transform.eulerAngles);
             }
         }
 

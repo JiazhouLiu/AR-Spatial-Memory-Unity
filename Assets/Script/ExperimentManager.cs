@@ -27,14 +27,14 @@ namespace SpatialMemoryTest
         public Transform WorldRig;
 
         [Header("Task File")]
-        public TextAsset Patterns_Fur_Ali;
-        public TextAsset Patterns_Fur_NotAli;
-        public TextAsset Patterns_NoFur_Ali;
-        public TextAsset Patterns_NoFur_NotAli;
-        public TextAsset AlignmentColumnPositions;
-        public TextAsset NotAlignmentColumnPositions;
-        public TextAsset AlignmentColumnRotations;
-        public TextAsset NotAlignmentColumnRotations;
+        public TextAsset Patterns_Fur_Reg;
+        public TextAsset Patterns_Fur_Irr;
+        public TextAsset Patterns_NoFur_Reg;
+        public TextAsset Patterns_NoFur_Irr;
+        public TextAsset RegularColumnPositions;
+        public TextAsset IrregularColumnPositions;
+        public TextAsset RegularColumnRotations;
+        public TextAsset IrregularColumnRotations;
         public TextAsset GameTask;
 
         [Header("Pre-study Variable")]
@@ -48,7 +48,7 @@ namespace SpatialMemoryTest
         public int numberOfColumns;
 
         [Header("In-study Variable")]
-        public AlignmentCondition alignmentCon;
+        public LayoutCondition layoutCon;
         public FurnitureCondition furnitureCon;
         public GameState gameState;
 
@@ -158,6 +158,8 @@ namespace SpatialMemoryTest
             localDistractorTime = distractorTime;
             localEachDistractorReactTime = eachDistractorReactTime;
 
+            WriteInteractionToLog("Adjusted Height: " + adjustedHeight);
+
             // setup experiment
             PrepareExperiment();
         }
@@ -174,7 +176,8 @@ namespace SpatialMemoryTest
             if (gameState == GameState.Recall)
                 RecallPhaseCheck();
 
-            //WritingToLog();
+            // write raw logs
+            WritingToLog();
 
             // testing
             if (Input.GetKeyDown("n"))
@@ -194,9 +197,9 @@ namespace SpatialMemoryTest
 
             // change trial conditions based on trial number
             furnitureCon = GetCurrentFurnitureCondition();
-            alignmentCon = GetCurrentAlignmentCondition();
+            layoutCon = GetCurrentLayoutCondition();
             
-            if (furnitureCon != FurnitureCondition.NULL && alignmentCon != AlignmentCondition.NULL)
+            if (furnitureCon != FurnitureCondition.NULL && layoutCon != LayoutCondition.NULL)
             {
                 WriteInteractionToLog("Prepare Phase");
 
@@ -629,6 +632,9 @@ namespace SpatialMemoryTest
                 WriteAnswerToLog();
             }
             trialNo++;
+
+            // flush raw log
+            FlushingRawLog();
             //gridCalibrate = false;
 
             if (trialNo > maxTrialNo)
@@ -681,24 +687,24 @@ namespace SpatialMemoryTest
         {
             string[] lines = new string[10];
 
-            // pattern of 5 cards for furniture and alignment
+            // pattern of 5 cards for furniture and regular layout
             lines = new string[20];
-            lines = Patterns_Fur_Ali.text.Split(lineSeperater);
+            lines = Patterns_Fur_Reg.text.Split(lineSeperater);
             Fur_Ali_TaskList.AddRange(lines);
 
-            // pattern of 5 cards for furniture and no alignment
+            // pattern of 5 cards for furniture and irregular layout
             lines = new string[20];
-            lines = Patterns_Fur_NotAli.text.Split(lineSeperater);
+            lines = Patterns_Fur_Irr.text.Split(lineSeperater);
             Fur_NotAli_TaskList.AddRange(lines);
 
-            // pattern of 5 cards for no furniture and alignment
+            // pattern of 5 cards for no furniture and regular layout
             lines = new string[20];
-            lines = Patterns_NoFur_Ali.text.Split(lineSeperater);
+            lines = Patterns_NoFur_Reg.text.Split(lineSeperater);
             NoFur_Ali_TaskList.AddRange(lines);
 
-            // pattern of 5 cards for no furniture and no alignment
+            // pattern of 5 cards for no furniture and irregular layout
             lines = new string[20];
-            lines = Patterns_NoFur_NotAli.text.Split(lineSeperater);
+            lines = Patterns_NoFur_Irr.text.Split(lineSeperater);
             NoFur_NotAli_TaskList.AddRange(lines);
         }
 
@@ -710,7 +716,7 @@ namespace SpatialMemoryTest
 
         #region Log System
         private void SetupLoggingSystem() {
-            //rawLogger = StartSceneScript.RawLogger;
+            rawLogger = StartSceneScript.RawLogger;
             interactionLogger = StartSceneScript.InteractionLogger;
             taskLogger = StartSceneScript.TaskLogger;
             trialCardLogger = StartSceneScript.TrialCardLogger;
@@ -723,10 +729,15 @@ namespace SpatialMemoryTest
         {
             if (rawLogger != null && Camera.main != null)
             {
-                rawLogger.AddRow(GetFixedTime() + "," + adjustedHeight + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + StartSceneScript.ExperimentSequence + "," +
-                    GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + GetGameState() + "," + VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
-                rawLogger.FlushData();
+                rawLogger.AddRow(GetFixedTime() + "," + GetTrialID() + "," + GetGameState() + "," +
+                    VectorToString(Camera.main.transform.position) + "," + VectorToString(Camera.main.transform.eulerAngles));
+                //FlushingRawLog();
             }
+        }
+
+        private void FlushingRawLog() {
+            if (rawLogger != null && Camera.main != null)
+                rawLogger.FlushData();
         }
 
         private void WriteAnswerToLog()
@@ -734,7 +745,7 @@ namespace SpatialMemoryTest
             if (taskLogger != null && userSelectedPatternCards.Count != 0)
             {
                 taskLogger.AddRow(StartSceneScript.ParticipantID + "," + GetTrialNumber() + "," + GetTrialID() + "," + GetFurnitureCondition() + "," +
-                    GetAlignmentCondition() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
+                    GetLayoutCondition() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
                 taskLogger.FlushData();
             }
         }
@@ -745,18 +756,19 @@ namespace SpatialMemoryTest
             {
                 if (info.Contains("seen"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                        StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "Card," + info.Split(' ')[0].Remove(0, 4) + ",,,");
+                        StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card," + info.Split(' ')[0].Remove(0, 4) + ",,,");
                 else if (info.Contains("selected"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + ",,");
+                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + ",,");
                 else if (info.Contains("answered"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "Card,,," + info.Split(' ')[0].Remove(0, 4) + ",");
+                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card,,," + info.Split(' ')[0].Remove(0, 4) + ",");
                 else if (info.Contains("played"))
                     interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
+                       StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
                 else
-                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetAlignmentCondition() + "," + info + ",,,");
+                    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," + 
+                        GetFurnitureCondition() + "," + GetLayoutCondition() + "," + info + ",,,");
             }
         }
 
@@ -881,37 +893,37 @@ namespace SpatialMemoryTest
         }
 
         // Get current physical environment dependence based on sequence
-        private AlignmentCondition GetCurrentAlignmentCondition()
+        private LayoutCondition GetCurrentLayoutCondition()
         {
             switch (experimentSequence)
             {
                 case 0:
                     if (trialNo <= 12 && trialNo >= 1)
-                        return AlignmentCondition.AlignWithFurniture;
+                        return LayoutCondition.Regular;
                     else
-                        return AlignmentCondition.NotAlignWithFurniture;
+                        return LayoutCondition.Irregular;
                 case 1:
                     if (trialNo <= 12 && trialNo >= 1)
-                        return AlignmentCondition.AlignWithFurniture;
+                        return LayoutCondition.Regular;
                     else
-                        return AlignmentCondition.NotAlignWithFurniture;
+                        return LayoutCondition.Irregular;
                 case 2:
                     if ((trialNo <= 6 && trialNo >= 1) || (trialNo <= 18 && trialNo >= 13))
-                        return AlignmentCondition.AlignWithFurniture;
+                        return LayoutCondition.Regular;
                     else
-                        return AlignmentCondition.NotAlignWithFurniture;
+                        return LayoutCondition.Irregular;
                 case 3:
                     if ((trialNo <= 12 && trialNo >= 7) || (trialNo <= 24 && trialNo >= 19))
-                        return AlignmentCondition.AlignWithFurniture;
+                        return LayoutCondition.Regular;
                     else
-                        return AlignmentCondition.NotAlignWithFurniture;
+                        return LayoutCondition.Irregular;
                 case 4:
                     if (trialNo <= 24 && trialNo >= 13)
-                        return AlignmentCondition.AlignWithFurniture;
+                        return LayoutCondition.Regular;
                     else
-                        return AlignmentCondition.NotAlignWithFurniture;
+                        return LayoutCondition.Irregular;
                 default:
-                    return AlignmentCondition.NULL;
+                    return LayoutCondition.NULL;
             }
         }
 
@@ -920,7 +932,7 @@ namespace SpatialMemoryTest
         {
             if (difficultyLevel == 5)
             {
-                if (furnitureCon == FurnitureCondition.HasFurniture && alignmentCon == AlignmentCondition.AlignWithFurniture)
+                if (furnitureCon == FurnitureCondition.HasFurniture && layoutCon == LayoutCondition.Regular)
                 {
                     if (Fur_Ali_TaskList.Count > 0)
                     {
@@ -938,7 +950,7 @@ namespace SpatialMemoryTest
                         return PatternID;
                     }
                 }
-                else if (furnitureCon == FurnitureCondition.HasFurniture && alignmentCon == AlignmentCondition.NotAlignWithFurniture)
+                else if (furnitureCon == FurnitureCondition.HasFurniture && layoutCon == LayoutCondition.Irregular)
                 {
                     if (Fur_NotAli_TaskList.Count > 0)
                     {
@@ -956,7 +968,7 @@ namespace SpatialMemoryTest
                         return PatternID;
                     }
                 }
-                else if (furnitureCon == FurnitureCondition.NoFurniture && alignmentCon == AlignmentCondition.AlignWithFurniture)
+                else if (furnitureCon == FurnitureCondition.NoFurniture && layoutCon == LayoutCondition.Regular)
                 {
                     if (NoFur_Ali_TaskList.Count > 0)
                     {
@@ -974,7 +986,7 @@ namespace SpatialMemoryTest
                         return PatternID;
                     }
                 }
-                else if (furnitureCon == FurnitureCondition.NoFurniture && alignmentCon == AlignmentCondition.NotAlignWithFurniture)
+                else if (furnitureCon == FurnitureCondition.NoFurniture && layoutCon == LayoutCondition.Irregular)
                 {
                     if (NoFur_NotAli_TaskList.Count > 0)
                     {
@@ -1000,10 +1012,10 @@ namespace SpatialMemoryTest
             Vector3[] columnPositions = new Vector3[12];
             string[] lines = new string[12];
 
-            if (alignmentCon == AlignmentCondition.AlignWithFurniture)
-                lines = AlignmentColumnPositions.text.Split(lineSeperater);
+            if (layoutCon == LayoutCondition.Regular)
+                lines = RegularColumnPositions.text.Split(lineSeperater);
             else
-                lines = NotAlignmentColumnPositions.text.Split(lineSeperater);
+                lines = IrregularColumnPositions.text.Split(lineSeperater);
 
             for (int i = 0; i < 12; i++)
             {
@@ -1023,10 +1035,10 @@ namespace SpatialMemoryTest
 
             string[] lines = new string[12];
 
-            if (alignmentCon == AlignmentCondition.AlignWithFurniture)
-                lines = AlignmentColumnRotations.text.Split(lineSeperater);
+            if (layoutCon == LayoutCondition.Regular)
+                lines = RegularColumnRotations.text.Split(lineSeperater);
             else
-                lines = NotAlignmentColumnRotations.text.Split(lineSeperater);
+                lines = IrregularColumnRotations.text.Split(lineSeperater);
 
             for (int i = 0; i < 12; i++)
             {
@@ -1102,14 +1114,14 @@ namespace SpatialMemoryTest
             }
         }
 
-        private string GetAlignmentCondition()
+        private string GetLayoutCondition()
         {
-            switch (alignmentCon)
+            switch (layoutCon)
             {
-                case AlignmentCondition.AlignWithFurniture:
-                    return "AlignWithFurniture";
-                case AlignmentCondition.NotAlignWithFurniture:
-                    return "NotAlignWithFurniture";
+                case LayoutCondition.Regular:
+                    return "Regular";
+                case LayoutCondition.Irregular:
+                    return "Irregular";
                 default:
                     return "NULL";
             }

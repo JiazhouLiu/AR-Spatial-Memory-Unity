@@ -34,8 +34,8 @@ public class RawLogger : MonoBehaviour
 {
     #region Constants to modify
     private const string SessionFolderRoot = "SpatialMemory";
-    private const string Header = "TimeSinceStart,UserHeight,TrialNo,TrialID,ParticipantID,ExperimentSequence,FurnitureCondition,AlignmentCondition," +
-        "Difficulty,TrialState,CameraPosition.x,CameraPosition.y,CameraPosition.z,CameraEulerAngles.x,CameraEulerAngles.y,CameraEulerAngles.z";
+    private const string Header = "TimeSinceStart,TrialID,TrialState,CameraPosition.x,CameraPosition.y,CameraPosition.z," +
+        "CameraEulerAngles.x,CameraEulerAngles.y,CameraEulerAngles.z";
     #endregion
 
     #region private members

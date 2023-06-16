@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Microsoft.MixedReality.Toolkit",
-        "Unity.XR.WindowsMixedReality"
+        "Unity.XR.WindowsMixedReality",
+		"TMPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
