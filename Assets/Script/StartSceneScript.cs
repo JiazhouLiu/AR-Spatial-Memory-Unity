@@ -7,6 +7,7 @@ using System.IO;
 using Random = UnityEngine.Random;
 using TMPro;
 using Microsoft.MixedReality.Toolkit;
+using Microsoft.MixedReality.SampleQRCodes;
 
 namespace SpatialMemoryTest
 {
@@ -18,12 +19,10 @@ namespace SpatialMemoryTest
         public static string CurrentDateTime;
         public static int PublicTrialNumber;
         public static float lastTimePast;
-        public static Vector3 calibratedPosition;
-        public static Vector3 calibratedRotation;
         #endregion
 
         #region Data Logger
-        //public static RawLogger RawLogger;
+        public static RawLogger RawLogger;
         public static InteractionLogger InteractionLogger;
         public static TaskLogger TaskLogger;
         public static TrialCardLogger TrialCardLogger;
@@ -39,6 +38,8 @@ namespace SpatialMemoryTest
         public GameObject HandMenu;
         public GameObject SetupMenu;
         public Transform WorldRig;
+        public Transform PhysicalQRCode;
+        public QRCodesVisualizer qrVis;
 
         [Header("Experiment Parameter")]
         public GameState gameState = GameState.NULL;
@@ -52,6 +53,7 @@ namespace SpatialMemoryTest
         private bool experimentNumberConfirmed = false;
         private bool trialNumberConfirmed = false;
         private bool finalConfirmed = false;
+        private bool calibrated = false;
         #endregion
 
         #region Game Variables
@@ -82,8 +84,6 @@ namespace SpatialMemoryTest
         // Start is called before the first frame update
         void Start()
         {
-            //WorldRig.transform.position -= Vector3.up * 1.8f;
-
             // initialise pattern task cards into list
             cardLists = new List<GameObject>{
                 MemoryTask.GetChild(0).gameObject,
@@ -105,17 +105,29 @@ namespace SpatialMemoryTest
 
             sp = SetupParameter.ExperimentNumber;
 
-            #region Log Related
-            //RawLogger = GetComponent<RawLogger>();
+            RawLogger = GetComponent<RawLogger>();
             InteractionLogger = GetComponent<InteractionLogger>();
             TaskLogger = GetComponent<TaskLogger>();
             TrialCardLogger = GetComponent<TrialCardLogger>();
             AnswerCardLogger = GetComponent<AnswerCardLogger>();
-            #endregion
         }
 
         private void Update()
         {
+            Vector3 qrPosition = QRCodesVisualizer.CalibratedPosition;
+            Vector3 qrRotation = QRCodesVisualizer.CalibratedRotation;
+            SetupText.text = qrPosition + " " + qrRotation;
+
+            if (Vector3.Distance(qrPosition, PhysicalQRCode.transform.position) > 0.05f || Vector3.SignedAngle(qrRotation, PhysicalQRCode.transform.eulerAngles, Vector3.up) > 5) {
+                Vector3 positionDiff = qrPosition - PhysicalQRCode.transform.position;
+                Vector3 rotationDiff = qrRotation - PhysicalQRCode.transform.eulerAngles;
+
+                WorldRig.position += positionDiff;
+                WorldRig.eulerAngles += rotationDiff;
+
+                WorldRig.eulerAngles = new Vector3(0, qrRotation.y + 180, 0);
+            }
+
             if (SceneManager.GetActiveScene().name == "StartScene") {
                 // setup experiment/participant ID
                 if (!finalConfirmed)
@@ -133,7 +145,7 @@ namespace SpatialMemoryTest
                     if (experimentNumberConfirmed && sp == SetupParameter.ExperimentNumber)
                         sp = SetupParameter.TrialNumber;
 
-                    SetupText.text = participantIDText + trialIDText;
+                    //SetupText.text = participantIDText + trialIDText;
                 }else // All Confirmed
                 {
                     if (ExperimentID == 0)
@@ -398,13 +410,6 @@ namespace SpatialMemoryTest
             else
                 t.GetChild(0).GetChild(0).GetChild(1).gameObject.SetActive(false);
         }
-
-        public void SetCalibrationPosAndRot(Vector3 position, Vector3 eulerAngle) {
-            if (calibratedPosition == null && calibratedRotation == null) {
-                calibratedPosition = position;
-                calibratedRotation = eulerAngle;
-            }
-        }
         #endregion
 
         #region getters
@@ -438,8 +443,8 @@ namespace SpatialMemoryTest
         private void LogDataHeader()
         {
             // Raw data log
-            //string rawFileName = "Participant_" + ParticipantID + "_Raw";
-            //RawLogger.StartNewCSV(rawFileName);
+            string rawFileName = "Participant_" + ParticipantID + "_Raw";
+            RawLogger.StartNewCSV(rawFileName);
 
             // interaction log
             string interactionFileName = "Participant_" + ParticipantID + "_Interaction";
@@ -510,7 +515,7 @@ namespace SpatialMemoryTest
         {
             Destroy(transform.parent.GetChild(1).gameObject);
             Destroy(transform.parent.GetChild(2).gameObject);
-            Destroy(transform.parent.GetChild(3).gameObject);
+            Destroy(transform.parent.GetChild(4).gameObject);
             SceneManager.LoadScene("Experiment", LoadSceneMode.Single);
         }
 

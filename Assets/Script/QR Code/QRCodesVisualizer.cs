@@ -8,6 +8,9 @@ namespace Microsoft.MixedReality.SampleQRCodes
 {
     public class QRCodesVisualizer : MonoBehaviour
     {
+        public static Vector3 CalibratedPosition = Vector3.zero;
+        public static Vector3 CalibratedRotation = Vector3.zero;
+
         public GameObject qrCodePrefab;
 
         private SortedDictionary<System.Guid, GameObject> qrCodesObjectsList;
@@ -136,6 +139,27 @@ namespace Microsoft.MixedReality.SampleQRCodes
         void Update()
         {
             HandleEvents();
+        }
+
+        void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
+        // Set Calibration Position and Rotation
+        public void SetCalibrationPositionAndRotation(Vector3 position, Vector3 rotation)
+        {
+            CalibratedPosition = position;
+            CalibratedRotation = rotation;
+        }
+
+        public Vector3 GetCurrentPosition() {
+            return CalibratedPosition;
+        }
+
+        public Vector3 GetCurrentRotation()
+        {
+            return CalibratedRotation;
         }
     }
 }

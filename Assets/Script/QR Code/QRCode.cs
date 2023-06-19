@@ -3,7 +3,6 @@
 
 using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine;
-using SpatialMemoryTest;
 
 namespace Microsoft.MixedReality.SampleQRCodes
 {
@@ -12,9 +11,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
     {
         public Microsoft.MixedReality.QR.QRCode qrCode;
         private GameObject qrCodeCube;
-
-        private Transform WorldRig;
-        private Transform PhysicalQRCode;
 
         public float PhysicalSize { get; private set; }
         public string CodeText { get; private set; }
@@ -43,9 +39,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
             }
 
             PhysicalSize = qrCode.PhysicalSideLength;
-
-            WorldRig = GameObject.Find("##### World Rig #####").transform;
-            PhysicalQRCode = GameObject.Find("Physical QR Code").transform;
 
             CodeText = qrCode.Data;
 
@@ -92,20 +85,8 @@ namespace Microsoft.MixedReality.SampleQRCodes
                 lastTimeStamp = qrCode.SystemRelativeLastDetectedTime.Ticks;
                 QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
 
-                if (CodeText == "ARSpatialMemory") {
-                    Vector3 positionDiff = qrCodeCube.transform.position - PhysicalQRCode.transform.position;
-                    float qrCodeYAxisRotation = qrCodeCube.transform.eulerAngles.y;
-
-                    Vector3 rotationDiff = qrCodeCube.transform.eulerAngles - PhysicalQRCode.transform.eulerAngles;
-
-                    WorldRig.position += positionDiff;
-                    WorldRig.eulerAngles += rotationDiff;
-                    WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
-
-                    if (GameObject.Find("MainExperimentManager") != null) {
-                        GameObject.Find("MainExperimentManager").GetComponent<StartSceneScript>().SetCalibrationPosAndRot(WorldRig.position, WorldRig.eulerAngles);
-                    }
-                } 
+                transform.parent.GetComponent<QRCodesVisualizer>().SetCalibrationPositionAndRotation(qrCodeCube.transform.position, qrCodeCube.transform.eulerAngles);
+                Debug.Log("!!!!update" + qrCodeCube.transform.position + "; " + qrCodeCube.transform.eulerAngles);
             }
         }
 

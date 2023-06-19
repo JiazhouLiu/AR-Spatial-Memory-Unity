@@ -15,10 +15,10 @@ namespace SpatialMemoryTest
         NULL
     }
 
-    public enum AlignmentCondition
+    public enum LayoutCondition
     {
-        AlignWithFurniture,
-        NotAlignWithFurniture,
+        Regular,
+        Irregular,
         NULL
     }
 
