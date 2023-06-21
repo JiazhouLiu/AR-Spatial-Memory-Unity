@@ -116,7 +116,6 @@ namespace SpatialMemoryTest
         {
             Vector3 qrPosition = QRCodesVisualizer.CalibratedPosition;
             Vector3 qrRotation = QRCodesVisualizer.CalibratedRotation;
-            SetupText.text = qrPosition + " " + qrRotation;
 
             if (Vector3.Distance(qrPosition, PhysicalQRCode.transform.position) > 0.05f || Vector3.SignedAngle(qrRotation, PhysicalQRCode.transform.eulerAngles, Vector3.up) > 5) {
                 Vector3 positionDiff = qrPosition - PhysicalQRCode.transform.position;
@@ -135,17 +134,17 @@ namespace SpatialMemoryTest
                     if (!experimentNumberConfirmed)
                         participantIDText = "Experiment Number: " + ExperimentID + ".\n";
                     else
-                        participantIDText = "Experiment Number: " + ExperimentID + " (Comfirmed).\n";
+                        participantIDText = "Experiment Number: " + ExperimentID + " (Confirmed).\n";
 
                     if (!trialNumberConfirmed)
                         trialIDText = "Trial Number: " + TrialNumber + ".\n";
                     else
-                        trialIDText = "Trial Number: " + TrialNumber + " (Comfirmed).\n";
+                        trialIDText = "Trial Number: " + TrialNumber + " (Confirmed).\n";
 
                     if (experimentNumberConfirmed && sp == SetupParameter.ExperimentNumber)
                         sp = SetupParameter.TrialNumber;
 
-                    //SetupText.text = participantIDText + trialIDText;
+                    SetupText.text = participantIDText + trialIDText;
                 }else // All Confirmed
                 {
                     if (ExperimentID == 0)
@@ -212,8 +211,8 @@ namespace SpatialMemoryTest
 
                     if (learningActivated)
                     {
-                        instruction.text = "This is the learning phase. There are five white cards out of 36 cards. " +
-                            "You need to remember the position for all the white cards in 15 seconds.";
+                        instruction.text = "This is the learning phase. There are 2 white cards out of 4 cards for this training scene. " +
+                            "In the real experiment, you need to remember the positions for 5 white cards out of 36 cards in 15 seconds.";
                         gameState = GameState.Learning;
 
                         if (!firstTimeSetup)
@@ -396,10 +395,8 @@ namespace SpatialMemoryTest
         #region setters
         private void SetupTaskPositionRotation(Transform t)
         {
-            t.position = Camera.main.transform.position + Camera.main.transform.TransformDirection(Vector3.forward) * 1f + Vector3.down * 0.5f;
-
-            t.LookAt(Camera.main.transform.position);
-            t.localEulerAngles = new Vector3(0, t.localEulerAngles.y + 180, 0);
+            t.localPosition = new Vector3(0,0,1);
+            t.localEulerAngles = Vector3.zero;
         }
 
         // Set Card Color

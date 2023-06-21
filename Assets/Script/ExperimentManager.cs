@@ -136,9 +136,10 @@ namespace SpatialMemoryTest
             if (GameObject.Find("MainExperimentManager") != null)
             {
                 // update calibrated position and rotation
-                //WorldRig.transform.position -= Vector3.up * 1.8f;
-                WorldRig.transform.position = StartSceneScript.calibratedPosition;
-                WorldRig.transform.eulerAngles = StartSceneScript.calibratedRotation;
+                if (GameObject.Find("##### World Rig #####") != null) {
+                    WorldRig.position = GameObject.Find("##### World Rig #####").transform.position;
+                    WorldRig.rotation = GameObject.Find("##### World Rig #####").transform.rotation;
+                }
 
                 // setup experimentSequence
                 experimentSequence = StartSceneScript.ExperimentSequence;
@@ -152,10 +153,6 @@ namespace SpatialMemoryTest
                 // setup writer stream
                 SetupLoggingSystem();
             }
-
-            // adjust distractor task board position and rotation
-            DistractorTask.position = new Vector3(0, adjustedHeight, 0.5f);
-            DistractorTask.localEulerAngles = Vector3.zero; // need to check this
 
             // setup timers
             LocalMemoryTime = memoryTime;
@@ -171,6 +168,9 @@ namespace SpatialMemoryTest
         // Update is called once per frame
         private void Update()
         {
+            if (gameState == GameState.Prepare)
+                PreparePhaseCheck();
+
             if (gameState == GameState.Learning)
                 LearningPhaseCheck();
 
@@ -191,13 +191,14 @@ namespace SpatialMemoryTest
         #region Prepare phase
         public void PrepareExperiment()
         {
-            // enable start button
-            startButton.gameObject.SetActive(true);
-
             gameState = GameState.Prepare;
             LocalMemoryTime = memoryTime;
             localDistractorTime = distractorTime;
             localEachDistractorReactTime = eachDistractorReactTime;
+
+            // adjust distractor task board position and rotation
+            DistractorTask.localPosition = new Vector3(0, 0, 1f);
+            DistractorTask.localEulerAngles = Vector3.zero; 
 
             // change trial conditions based on trial number
             furnitureCon = GetCurrentFurnitureCondition();
@@ -208,9 +209,12 @@ namespace SpatialMemoryTest
                 WriteInteractionToLog("Prepare Phase");
 
                 if (GetTrialID() == "Training")
-                    Instruction.text = "Training Task.\n\n Press the Start button when you are ready.";
+                    Instruction.text = "Training Task.\n\n Please return to the starting point. After pressing the Start button, you will have 15 seconds " +
+                        "to remember the positions of 5 white cards. You will hear a timer sound when you only have 3 seconds left.";
                 else
-                    Instruction.text = "Experiment Task: " + GetTrialID() + " / 16.\n\n Press the Start button when you are ready. ";
+                    Instruction.text = "Experiment Task: " + GetTrialID() + " / 16.\n\n Please return to the starting point. " +
+                        "After pressing the Start button, you will have 15 seconds " +
+                        "to remember the positions of 5 white cards. You will hear a timer sound when you only have 3 seconds left. ";
 
                 if (patternCards != null)
                 {
@@ -247,6 +251,22 @@ namespace SpatialMemoryTest
         #endregion
 
         #region Prepare Phase Functions
+        private void PreparePhaseCheck() {
+            if (GameObject.Find("PreferableStand") != null)
+            {
+                Transform startingPoint = GameObject.Find("PreferableStand").transform;
+                Vector3 startingPoint2D = new Vector3(startingPoint.position.x, 0, startingPoint.position.z);
+
+                Vector3 cameraPosition2D = new Vector3(Camera.main.transform.position.x, 0, Camera.main.transform.position.z);
+                if (Vector3.Distance(startingPoint2D, cameraPosition2D) <= 0.3f)
+                    startButton.gameObject.SetActive(true);
+                else
+                    startButton.gameObject.SetActive(false);
+            }
+            else
+                Debug.Log("Cannot find starting point gameobject");
+        }
+
         // Generate patternCards
         private List<GameObject> GenerateCards()
         {
@@ -329,8 +349,7 @@ namespace SpatialMemoryTest
         // Show pattern (after clicking Start button)
         public void InitiateLearningPhase()
         {
-            Instruction.text = "You now have 15 seconds to remember the positions of 5 white cards.\n" +
-                "You will hear a timer sound when you only have 3 seconds left.";
+            Instruction.text = "Please remember the positions of 5 white cards.";
             
             WriteInteractionToLog("Learning Phase");
             
@@ -438,6 +457,8 @@ namespace SpatialMemoryTest
 
             gameState = GameState.Distractor;
             WriteInteractionToLog("Distractor");
+
+            Instruction.text = "Select the number below!\nTimes remaining: " + localDistractorTime.ToString("0.0");
 
             GetNewDistractorTask();
         }
@@ -623,8 +644,11 @@ namespace SpatialMemoryTest
                 if (IsCardSelected(card))
                     SetCardsColor(card.transform, Color.white);
 
-                if (IsCardFilled(card))
+                if (IsCardFilled(card)) {
+                    card.transform.localEulerAngles += Vector3.up * 180;
                     SetCardsColor(card.transform, Color.white);
+                }
+                    
             }
 
             // increase trial No

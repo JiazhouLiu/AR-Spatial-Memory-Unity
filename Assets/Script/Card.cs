@@ -120,7 +120,7 @@ namespace SpatialMemoryTest {
                     }
                     else if (selected && !filled) {
                         foreach (Transform t in borders)
-                            t.GetComponent<Image>().color = Color.red;
+                            t.GetComponent<Image>().color = touchedColor;
                     }
                 }
                 //else {

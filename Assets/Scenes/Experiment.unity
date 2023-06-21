@@ -180,7 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 445313669}
   m_Layer: 0
-  m_Name: '##### World Rig #####'
+  m_Name: '##### World Rig Experiment #####'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
