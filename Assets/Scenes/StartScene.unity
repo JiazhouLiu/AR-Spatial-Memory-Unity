@@ -1179,6 +1179,7 @@ MonoBehaviour:
   PhysicalQRCodeBottomLeft: {fileID: 802202966}
   PhysicalQRCodeTopLeft: {fileID: 873799839}
   qrVis: {fileID: 1099154854}
+  CorrectAnswerSoundEffect: {fileID: 8300000, guid: e2941bb91c0bfa744bf8d8585326406e, type: 3}
   gameState: 6
 --- !u!114 &559999960
 MonoBehaviour:
@@ -2656,7 +2657,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b37cd175f9216164880ffef5d0627744, type: 2}
     - target: {fileID: 5361480710540427119, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}
       propertyPath: m_Name
-      value: MixedRealityToolkit (Inactive)
+      value: MixedRealityToolkit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}

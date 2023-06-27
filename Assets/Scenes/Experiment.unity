@@ -316,7 +316,7 @@ MonoBehaviour:
   IrregularColumnRotations: {fileID: 4900000, guid: e297db2c8f604c34fb2462d590f11cc3, type: 3}
   GameTask: {fileID: 4900000, guid: d97af0e7a0a7d414ab438ae212497150, type: 3}
   hDelta: 0.5
-  vDelta: 0.4
+  vDelta: 0.3
   cardSize: 0.3
   memoryTime: 15
   distractorTime: 15
@@ -782,7 +782,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b37cd175f9216164880ffef5d0627744, type: 2}
     - target: {fileID: 5361480710540427119, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}
       propertyPath: m_Name
-      value: MixedRealityToolkit
+      value: MixedRealityToolkit (Inactive)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}

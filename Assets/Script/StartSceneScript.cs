@@ -42,6 +42,7 @@ public class StartSceneScript : MonoBehaviour
     public Transform PhysicalQRCodeBottomLeft;
     public Transform PhysicalQRCodeTopLeft;
     public QRCodesVisualizer qrVis;
+    public AudioClip CorrectAnswerSoundEffect;
     #endregion
 
     [Header("Experiment Parameter")]
@@ -305,11 +306,17 @@ public class StartSceneScript : MonoBehaviour
 
     #region Calibration Functions
     private void CalibrateWorldRig(string direction) {
-        if (direction == "TopRight") {
-            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionTopRight - PhysicalQRCodeTopRight.transform.position;
-            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationTopRight - PhysicalQRCodeTopRight.transform.eulerAngles;
+        // reset static variables
+        QRCodesVisualizer.changeDetected = false;
+        QRCodesVisualizer.changeDirection = "";
+        // local variable
+        Transform calibratedTransform = null;
 
-            Debug.Log("!!!SSS: " + direction + ";" + positionDiff + ";" + rotationDiff);
+        if (direction == "TopRight") {
+            calibratedTransform = PhysicalQRCodeTopRight.transform;
+
+            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionTopRight - calibratedTransform.position;
+            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationTopRight - calibratedTransform.eulerAngles;
 
             WorldRig.position += positionDiff;
             WorldRig.eulerAngles += rotationDiff;
@@ -319,10 +326,10 @@ public class StartSceneScript : MonoBehaviour
 
         if (direction == "BottomRight")
         {
-            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionBottomRight - PhysicalQRCodeBottomRight.transform.position;
-            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationBottomRight - PhysicalQRCodeBottomRight.transform.eulerAngles;
+            calibratedTransform = PhysicalQRCodeBottomRight.transform;
 
-            Debug.Log("!!!SSS: " + direction + ";" + positionDiff + ";" + rotationDiff);
+            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionBottomRight - calibratedTransform.position;
+            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationBottomRight - calibratedTransform.eulerAngles;
 
             WorldRig.position += positionDiff;
             WorldRig.eulerAngles += rotationDiff;
@@ -332,10 +339,23 @@ public class StartSceneScript : MonoBehaviour
 
         if (direction == "BottomLeft")
         {
-            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionBottomLeft - PhysicalQRCodeBottomLeft.transform.position;
-            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationBottomLeft - PhysicalQRCodeBottomLeft.transform.eulerAngles;
+            calibratedTransform = PhysicalQRCodeBottomLeft.transform;
 
-            Debug.Log("!!!SSS: " + direction + ";" + positionDiff + ";" + rotationDiff);
+            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionBottomLeft - calibratedTransform.position;
+            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationBottomLeft - calibratedTransform.eulerAngles;
+
+            WorldRig.position += positionDiff;
+            WorldRig.eulerAngles += rotationDiff;
+
+            WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
+        }
+
+        if (direction == "TopLeft")
+        {
+            calibratedTransform = PhysicalQRCodeTopLeft.transform;
+
+            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionTopLeft - calibratedTransform.position;
+            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationTopLeft - calibratedTransform.eulerAngles;
 
             WorldRig.position += positionDiff;
             WorldRig.eulerAngles += rotationDiff;
@@ -343,17 +363,8 @@ public class StartSceneScript : MonoBehaviour
             WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
         }
 
-        if (direction == "TopLeft") {
-            Vector3 positionDiff = QRCodesVisualizer.CalibratedPositionTopLeft - PhysicalQRCodeTopLeft.transform.position;
-            Vector3 rotationDiff = QRCodesVisualizer.CalibratedRotationTopLeft - PhysicalQRCodeTopLeft.transform.eulerAngles;
-
-            Debug.Log("!!!SSS: " + direction + ";" + positionDiff + ";" + rotationDiff);
-
-            WorldRig.position += positionDiff;
-            WorldRig.eulerAngles += rotationDiff;
-
-            WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
-        }
+        //if(calibratedTransform != null)
+            //AudioSource.PlayClipAtPoint(CorrectAnswerSoundEffect, calibratedTransform.position);
     }
     #endregion
 

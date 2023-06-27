@@ -176,7 +176,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
                 CalibratedPositionTopLeft = position;
                 CalibratedRotationTopLeft = rotation;
             }
-            Debug.Log("!!!QRVIS: " + direction + ";" + position + ";" + rotation);
         }
     }
 }
