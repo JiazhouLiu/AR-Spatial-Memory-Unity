@@ -295,6 +295,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CardPrefab: {fileID: 5727101587611926129, guid: 2ce879b5c7feaf24397a4fb544429ab6, type: 3}
   TimesUp: {fileID: 8300000, guid: af03294447612544e96e620ea620323e, type: 3}
+  WrongAnswerAudio: {fileID: 8300000, guid: ba0c80192a09e1546a1e4adf67230a2c, type: 3}
+  CorrectAnswerAudio: {fileID: 8300000, guid: e2941bb91c0bfa744bf8d8585326406e, type: 3}
   Instruction: {fileID: 1178177511}
   DistractorTask: {fileID: 1130929884}
   DistractorTaskInstruction: {fileID: 238492471}
@@ -318,7 +320,7 @@ MonoBehaviour:
   cardSize: 0.3
   memoryTime: 15
   distractorTime: 15
-  eachDistractorReactTime: 5
+  eachDistractorReactTime: 3
   numberOfRows: 3
   numberOfColumns: 12
   layoutCon: 0
@@ -780,7 +782,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b37cd175f9216164880ffef5d0627744, type: 2}
     - target: {fileID: 5361480710540427119, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}
       propertyPath: m_Name
-      value: MixedRealityToolkit (Inactive)
+      value: MixedRealityToolkit
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}

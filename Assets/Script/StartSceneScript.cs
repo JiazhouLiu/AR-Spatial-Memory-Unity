@@ -27,6 +27,7 @@ public class StartSceneScript : MonoBehaviour
     public static AnswerCardLogger AnswerCardLogger;
     #endregion
 
+    #region reference variables
     [Header("Reference")]
     public TextMeshPro instruction;
     public TextMeshPro SetupText;
@@ -41,6 +42,7 @@ public class StartSceneScript : MonoBehaviour
     public Transform PhysicalQRCodeBottomLeft;
     public Transform PhysicalQRCodeTopLeft;
     public QRCodesVisualizer qrVis;
+    #endregion
 
     [Header("Experiment Parameter")]
     public GameState gameState = GameState.NULL;
@@ -126,9 +128,9 @@ public class StartSceneScript : MonoBehaviour
             if (!finalConfirmed)
             {
                 if (!experimentNumberConfirmed)
-                    participantIDText = "Experiment Number: " + ExperimentID + ".\n";
+                    participantIDText = "Participant ID: " + ExperimentID + ".\n";
                 else
-                    participantIDText = "Experiment Number: " + ExperimentID + " (Confirmed).\n";
+                    participantIDText = "Participant ID: " + ExperimentID + " (Confirmed).\n";
 
                 if (!trialNumberConfirmed)
                     trialIDText = "Trial Number: " + TrialNumber + ".\n";
@@ -297,17 +299,6 @@ public class StartSceneScript : MonoBehaviour
                     instruction.text = "Now, please stand still and press the Start button to start the experiment.";
                 }
                 #endregion
-            }
-            if (Input.GetKeyDown("n"))
-            {
-                Destroy(transform.parent.GetChild(1).gameObject);
-                Destroy(transform.parent.GetChild(2).gameObject);
-                Destroy(transform.parent.GetChild(3).gameObject);
-                SceneManager.LoadScene("Experiment", LoadSceneMode.Single);
-            }
-            if (Input.GetKeyDown("w"))
-            {
-                WorldRig.position += Vector3.forward * 0.1f;
             }
         }
     }

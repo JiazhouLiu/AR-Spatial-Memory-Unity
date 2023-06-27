@@ -2656,7 +2656,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b37cd175f9216164880ffef5d0627744, type: 2}
     - target: {fileID: 5361480710540427119, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}
       propertyPath: m_Name
-      value: MixedRealityToolkit
+      value: MixedRealityToolkit (Inactive)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e5a97f694db84c34b86b93ee493314f4, type: 3}

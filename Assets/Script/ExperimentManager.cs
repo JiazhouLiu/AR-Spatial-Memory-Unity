@@ -9,9 +9,12 @@ public class ExperimentManager : MonoBehaviour
 {
     public static int trialNo;
 
+    #region prefab and reference variables
     [Header("Resource")]
     public GameObject CardPrefab;
     public AudioClip TimesUp;
+    public AudioClip WrongAnswerAudio;
+    public AudioClip CorrectAnswerAudio;
 
     [Header("Reference")]
     public TextMeshPro Instruction;
@@ -34,6 +37,7 @@ public class ExperimentManager : MonoBehaviour
     public TextAsset RegularColumnRotations;
     public TextAsset IrregularColumnRotations;
     public TextAsset GameTask;
+    #endregion
 
     [Header("Pre-study Variable")]
     public float hDelta;
@@ -193,10 +197,6 @@ public class ExperimentManager : MonoBehaviour
 
         // write raw logs
         WritingToLog();
-
-        // testing
-        if (Input.GetKeyDown("n"))
-            NextGameState();
     }
 
     #region Prepare phase
@@ -554,7 +554,8 @@ public class ExperimentManager : MonoBehaviour
 
                 if (localEachDistractorReactTime <= 0)
                 {
-                    DistractorTaskInstruction.color = Color.red;
+                    // play sound 
+                    AudioSource.PlayClipAtPoint(WrongAnswerAudio, DistractorTask.position);
                     localDistractorTime += eachDistractorReactTime;
                     localEachDistractorReactTime = eachDistractorReactTime;
 
@@ -564,8 +565,6 @@ public class ExperimentManager : MonoBehaviour
                 {
                     localEachDistractorReactTime -= Time.deltaTime;
 
-                    //Instruction.text = "Select the number below!\nTimes remaining: " + localDistractorTime.ToString("0.0");
-
                     if (finishTouching)
                     {
                         finishTouching = false;
@@ -574,12 +573,13 @@ public class ExperimentManager : MonoBehaviour
                         {
                             localDistractorTime += eachDistractorReactTime;
                             GetNewDistractorTask();
-                            // play sound or show text
-                            Instruction.color = Color.red;
+                            // play sound 
+                            AudioSource.PlayClipAtPoint(WrongAnswerAudio, DistractorTask.position);
                         }
                         else if (touchingCard.name == currentGameNumber.ToString())
                         {
-                            Instruction.color = Color.white;
+                            // play sound 
+                            AudioSource.PlayClipAtPoint(CorrectAnswerAudio, DistractorTask.position);
                             DistractorTaskInstruction.color = Color.white;
                             localEachDistractorReactTime = eachDistractorReactTime;
                             GetNewDistractorTask();
@@ -601,7 +601,6 @@ public class ExperimentManager : MonoBehaviour
     {
         WriteInteractionToLog("Recall Phase");
         gameState = GameState.Recall;
-
 
         // show patternCards
         foreach (GameObject card in patternCards)
