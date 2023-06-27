@@ -8,8 +8,16 @@ namespace Microsoft.MixedReality.SampleQRCodes
 {
     public class QRCodesVisualizer : MonoBehaviour
     {
-        public static Vector3 CalibratedPosition = Vector3.zero;
-        public static Vector3 CalibratedRotation = Vector3.zero;
+        public static Vector3 CalibratedPositionTopRight = Vector3.zero;
+        public static Vector3 CalibratedRotationTopRight = Vector3.zero;
+        public static Vector3 CalibratedPositionBottomRight = Vector3.zero;
+        public static Vector3 CalibratedRotationBottomRight = Vector3.zero;
+        public static Vector3 CalibratedPositionBottomLeft = Vector3.zero;
+        public static Vector3 CalibratedRotationBottomLeft = Vector3.zero;
+        public static Vector3 CalibratedPositionTopLeft = Vector3.zero;
+        public static Vector3 CalibratedRotationTopLeft = Vector3.zero;
+        public static bool changeDetected = false;
+        public static string changeDirection = "";
 
         public GameObject qrCodePrefab;
 
@@ -61,8 +69,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
 
         private void Instance_QRCodeAdded(object sender, QRCodeEventArgs<Microsoft.MixedReality.QR.QRCode> e)
         {
-            Debug.Log("QRCodesVisualizer Instance_QRCodeAdded");
-
             lock (pendingActions)
             {
                 pendingActions.Enqueue(new ActionData(ActionData.Type.Added, e.Data));
@@ -71,8 +77,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
 
         private void Instance_QRCodeUpdated(object sender, QRCodeEventArgs<Microsoft.MixedReality.QR.QRCode> e)
         {
-            Debug.Log("QRCodesVisualizer Instance_QRCodeUpdated");
-
             lock (pendingActions)
             {
                 pendingActions.Enqueue(new ActionData(ActionData.Type.Updated, e.Data));
@@ -81,8 +85,6 @@ namespace Microsoft.MixedReality.SampleQRCodes
 
         private void Instance_QRCodeRemoved(object sender, QRCodeEventArgs<Microsoft.MixedReality.QR.QRCode> e)
         {
-            Debug.Log("QRCodesVisualizer Instance_QRCodeRemoved");
-
             lock (pendingActions)
             {
                 pendingActions.Enqueue(new ActionData(ActionData.Type.Removed, e.Data));
@@ -147,19 +149,34 @@ namespace Microsoft.MixedReality.SampleQRCodes
         }
 
         // Set Calibration Position and Rotation
-        public void SetCalibrationPositionAndRotation(Vector3 position, Vector3 rotation)
+        public void SetCalibrationPositionAndRotation(Vector3 position, Vector3 rotation, string direction)
         {
-            CalibratedPosition = position;
-            CalibratedRotation = rotation;
-        }
+            changeDetected = true;
+            changeDirection = direction;
+            if (direction == "TopRight")
+            {
+                CalibratedPositionTopRight = position;
+                CalibratedRotationTopRight = rotation;
+            }
 
-        public Vector3 GetCurrentPosition() {
-            return CalibratedPosition;
-        }
+            if (direction == "BottomRight")
+            {
+                CalibratedPositionBottomRight = position;
+                CalibratedRotationBottomRight = rotation;
+            }
 
-        public Vector3 GetCurrentRotation()
-        {
-            return CalibratedRotation;
+            if (direction == "BottomLeft")
+            {
+                CalibratedPositionBottomLeft = position;
+                CalibratedRotationBottomLeft = rotation;
+            }
+
+            if (direction == "TopLeft")
+            {
+                CalibratedPositionTopLeft = position;
+                CalibratedRotationTopLeft = rotation;
+            }
+            Debug.Log("!!!QRVIS: " + direction + ";" + position + ";" + rotation);
         }
     }
 }

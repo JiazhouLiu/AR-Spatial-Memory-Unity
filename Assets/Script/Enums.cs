@@ -2,35 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SpatialMemoryTest
+public enum GameState
 {
-    public enum GameState
-    {
-        Prepare,
-        Learning,
-        Distractor,
-        Recall,
-        Result,
-        Break,
-        NULL
-    }
+    Prepare,
+    Learning,
+    Distractor,
+    Recall,
+    Result,
+    Break,
+    NULL
+}
 
-    public enum LayoutCondition
-    {
-        Regular,
-        Irregular,
-        NULL
-    }
+public enum LayoutCondition
+{
+    Regular,
+    Irregular,
+    NULL
+}
 
-    public enum FurnitureCondition
-    {
-        HasFurniture,
-        NoFurniture,
-        NULL
-    }
+public enum FurnitureCondition
+{
+    HasFurniture,
+    NoFurniture,
+    NULL
+}
 
-    public enum SetupParameter { 
-        ExperimentNumber,
-        TrialNumber
-    }
+public enum SetupParameter { 
+    ExperimentNumber,
+    TrialNumber
 }

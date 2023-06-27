@@ -5,54 +5,51 @@ using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 
-namespace SpatialMemoryTest
+[AddComponentMenu("Scripts/SpatialMemory/HandInteractionTouch")]
+public class HandInteractionTouch_SpatialMemory : MonoBehaviour, IMixedRealityTouchHandler
 {
-    [AddComponentMenu("Scripts/SpatialMemory/HandInteractionTouch")]
-    public class HandInteractionTouch_SpatialMemory : MonoBehaviour, IMixedRealityTouchHandler
+    [SerializeField]
+    private TextMesh debugMessage = null;
+    [SerializeField]
+    private TextMesh debugMessage2 = null;
+
+    #region Event handlers
+    public TouchEvent OnTouchCompleted;
+    public TouchEvent OnTouchStarted;
+    public TouchEvent OnTouchUpdated;
+    #endregion
+
+    private void Start()
     {
-        [SerializeField]
-        private TextMesh debugMessage = null;
-        [SerializeField]
-        private TextMesh debugMessage2 = null;
+    }
 
-        #region Event handlers
-        public TouchEvent OnTouchCompleted;
-        public TouchEvent OnTouchStarted;
-        public TouchEvent OnTouchUpdated;
-        #endregion
+    void IMixedRealityTouchHandler.OnTouchCompleted(HandTrackingInputEventData eventData)
+    {
+        OnTouchCompleted.Invoke(eventData);
 
-        private void Start()
+        if (debugMessage != null)
         {
+            debugMessage.text = "OnTouchCompleted: " + Time.unscaledTime.ToString();
         }
+    }
 
-        void IMixedRealityTouchHandler.OnTouchCompleted(HandTrackingInputEventData eventData)
+    void IMixedRealityTouchHandler.OnTouchStarted(HandTrackingInputEventData eventData)
+    {
+        OnTouchStarted.Invoke(eventData);
+
+        if (debugMessage != null)
         {
-            OnTouchCompleted.Invoke(eventData);
-
-            if (debugMessage != null)
-            {
-                debugMessage.text = "OnTouchCompleted: " + Time.unscaledTime.ToString();
-            }
+            debugMessage.text = "OnTouchStarted: " + Time.unscaledTime.ToString();
         }
+    }
 
-        void IMixedRealityTouchHandler.OnTouchStarted(HandTrackingInputEventData eventData)
+    void IMixedRealityTouchHandler.OnTouchUpdated(HandTrackingInputEventData eventData)
+    {
+        OnTouchUpdated.Invoke(eventData);
+
+        if (debugMessage2 != null)
         {
-            OnTouchStarted.Invoke(eventData);
-
-            if (debugMessage != null)
-            {
-                debugMessage.text = "OnTouchStarted: " + Time.unscaledTime.ToString();
-            }
-        }
-
-        void IMixedRealityTouchHandler.OnTouchUpdated(HandTrackingInputEventData eventData)
-        {
-            OnTouchUpdated.Invoke(eventData);
-
-            if (debugMessage2 != null)
-            {
-                debugMessage2.text = "OnTouchUpdated: " + Time.unscaledTime.ToString();
-            }
+            debugMessage2.text = "OnTouchUpdated: " + Time.unscaledTime.ToString();
         }
     }
 }

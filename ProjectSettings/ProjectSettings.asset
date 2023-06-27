@@ -628,7 +628,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Spatial-Memory-Test-Package
-  metroPackageVersion: 1.0.82.0
+  metroPackageVersion: 1.0.115.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Monash University

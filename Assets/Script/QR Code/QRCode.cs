@@ -81,12 +81,26 @@ namespace Microsoft.MixedReality.SampleQRCodes
                 Debug.Log("Id= " + qrCode.Id + "NodeId= " + qrCode.SpatialGraphNodeId + " PhysicalSize = " + PhysicalSize + " TimeStamp = " + qrCode.SystemRelativeLastDetectedTime.Ticks + " Time = " + qrCode.LastDetectedTime.ToString("MM/dd/yyyy HH:mm:ss.fff"));
 
                 qrCodeCube.transform.localPosition = new Vector3(PhysicalSize / 2.0f, PhysicalSize / 2.0f, 0.0f);
-                qrCodeCube.transform.localScale = new Vector3(PhysicalSize, PhysicalSize, 0.005f);
+                qrCodeCube.transform.localScale = new Vector3(PhysicalSize, 0.005f, PhysicalSize);
                 lastTimeStamp = qrCode.SystemRelativeLastDetectedTime.Ticks;
                 QRInfo.transform.localScale = new Vector3(PhysicalSize / 0.2f, PhysicalSize / 0.2f, PhysicalSize / 0.2f);
 
-                transform.parent.GetComponent<QRCodesVisualizer>().SetCalibrationPositionAndRotation(qrCodeCube.transform.position, qrCodeCube.transform.eulerAngles);
-                Debug.Log("!!!!update" + qrCodeCube.transform.position + "; " + qrCodeCube.transform.eulerAngles);
+                Debug.Log("!!!QRCODE: " + qrCodeCube.transform.position);
+                if (qrCode.Data == "TopRight")
+                    transform.parent.GetComponent<QRCodesVisualizer>().
+                        SetCalibrationPositionAndRotation(qrCodeCube.transform.position, qrCodeCube.transform.eulerAngles, "TopRight");
+
+                if (qrCode.Data == "BottomRight")
+                    transform.parent.GetComponent<QRCodesVisualizer>().
+                        SetCalibrationPositionAndRotation(qrCodeCube.transform.position, qrCodeCube.transform.eulerAngles, "BottomRight");
+
+                if (qrCode.Data == "BottomLeft")
+                    transform.parent.GetComponent<QRCodesVisualizer>().
+                        SetCalibrationPositionAndRotation(qrCodeCube.transform.position, qrCodeCube.transform.eulerAngles, "BottomLeft");
+
+                if (qrCode.Data == "TopLeft")
+                    transform.parent.GetComponent<QRCodesVisualizer>().
+                        SetCalibrationPositionAndRotation(qrCodeCube.transform.position, qrCodeCube.transform.eulerAngles, "TopLeft");
             }
         }
 
@@ -104,8 +118,8 @@ namespace Microsoft.MixedReality.SampleQRCodes
         void LaunchUri()
         {
 #if WINDOWS_UWP
-            // Launch the URI
-            UnityEngine.WSA.Launcher.LaunchUri(uriResult.ToString(), true);
+        // Launch the URI
+        UnityEngine.WSA.Launcher.LaunchUri(uriResult.ToString(), true);
 #endif
         }
 
