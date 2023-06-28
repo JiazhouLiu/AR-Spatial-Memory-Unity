@@ -157,7 +157,7 @@ public class ExperimentManager : MonoBehaviour
             {
                 // setup adjusted height
                 adjustedHeight = Camera.main.transform.position.y - 0.5f;
-                WriteInteractionToLog("Adjusted Height: " + adjustedHeight);
+                WriteInteractionToLog("Adjusted Height: " + adjustedHeight, "");
             }
         }
 
@@ -219,7 +219,7 @@ public class ExperimentManager : MonoBehaviour
 
         if (furnitureCon != FurnitureCondition.NULL && layoutCon != LayoutCondition.NULL)
         {
-            WriteInteractionToLog("Prepare Phase");
+            WriteInteractionToLog("Prepare Phase", "");
 
             if (GetTrialID() == "Training")
                 Instruction.text = "Training Task.\nPlease return to the starting position. " +
@@ -367,7 +367,7 @@ public class ExperimentManager : MonoBehaviour
     {
         Instruction.text = "Please remember the positions of 5 white cards.";
 
-        WriteInteractionToLog("Learning Phase");
+        WriteInteractionToLog("Learning Phase", "");
 
         foreach (GameObject card in patternCards)
         {
@@ -411,7 +411,7 @@ public class ExperimentManager : MonoBehaviour
                     if (!go.GetComponent<Card>().seenLogged)
                     {
                         go.GetComponent<Card>().seen = true;
-                        WriteInteractionToLog(go.name + " seen");
+                        WriteInteractionToLog(go.name + " seen", VectorToString(go.transform.position));
                         scanTimeLog.Add(scanTime);
                         go.GetComponent<Card>().seenLogged = true;
                     }
@@ -473,7 +473,7 @@ public class ExperimentManager : MonoBehaviour
         DistractorTask.gameObject.SetActive(true);
 
         gameState = GameState.Distractor;
-        WriteInteractionToLog("Distractor");
+        WriteInteractionToLog("Distractor", "");
 
         Instruction.text = "Please return to the starting point!";
 
@@ -519,7 +519,7 @@ public class ExperimentManager : MonoBehaviour
         currentGameNumber = task;
 
         DistractorTaskInstruction.text = task + "";
-        WriteInteractionToLog("Distractor Number: " + task);
+        WriteInteractionToLog("Distractor Number: " + task, "");
     }
 
     private void HideDistractorCards()
@@ -557,6 +557,8 @@ public class ExperimentManager : MonoBehaviour
                     // play sound 
                     AudioSource.PlayClipAtPoint(WrongAnswerAudio, DistractorTask.position);
                     localDistractorTime += eachDistractorReactTime;
+                    if (localDistractorTime > 15)
+                        localDistractorTime = 15;
                     localEachDistractorReactTime = eachDistractorReactTime;
 
                     GetNewDistractorTask();
@@ -572,6 +574,8 @@ public class ExperimentManager : MonoBehaviour
                         if (touchingCard.name != currentGameNumber.ToString())
                         {
                             localDistractorTime += eachDistractorReactTime;
+                            if (localDistractorTime > 15)
+                                localDistractorTime = 15;
                             GetNewDistractorTask();
                             // play sound 
                             AudioSource.PlayClipAtPoint(WrongAnswerAudio, DistractorTask.position);
@@ -599,7 +603,7 @@ public class ExperimentManager : MonoBehaviour
     #region Recall Phase
     private void InitiateRecallPhase()
     {
-        WriteInteractionToLog("Recall Phase");
+        WriteInteractionToLog("Recall Phase", "");
         gameState = GameState.Recall;
 
         // show patternCards
@@ -613,7 +617,7 @@ public class ExperimentManager : MonoBehaviour
     {
         if (selectedCard.name.Contains("Card") && userSelectedPatternCards.Count < difficultyLevel && !userSelectedPatternCards.Contains(selectedCard))
         {
-            WriteInteractionToLog(selectedCard.name + " answered");
+            WriteInteractionToLog(selectedCard.name + " answered", VectorToString(selectedCard.transform.position));
             userSelectedPatternCards.Add(selectedCard);
 
             SetCardsColor(selectedCard.transform, Color.white);
@@ -642,7 +646,7 @@ public class ExperimentManager : MonoBehaviour
     {
         gameState = GameState.Result;
 
-        WriteInteractionToLog("Result");
+        WriteInteractionToLog("Result", "");
         interactionLogger.FlushData();
 
         CheckResult();
@@ -815,25 +819,26 @@ public class ExperimentManager : MonoBehaviour
         }
     }
 
-    public void WriteInteractionToLog(string info)
+    public void WriteInteractionToLog(string info, string cardPosition)
     {
         if (interactionLogger != null)
         {
             if (info.Contains("seen"))
                 interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                    StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card," + info.Split(' ')[0].Remove(0, 4) + ",,,");
-            else if (info.Contains("selected"))
-                interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                    StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + ",,");
+                    StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card," + info.Split(' ')[0].Remove(0, 4) + ",," + cardPosition);
             else if (info.Contains("answered"))
                 interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                    StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card,,," + info.Split(' ')[0].Remove(0, 4) + ",");
-            else if (info.Contains("played"))
-                interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
-                    StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
+                    StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + "," + cardPosition);
             else
                 interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," + StartSceneScript.ParticipantID + "," +
-                    GetFurnitureCondition() + "," + GetLayoutCondition() + "," + info + ",,,");
+                    GetFurnitureCondition() + "," + GetLayoutCondition() + "," + info + ",,,,,");
+            //else if (info.Contains("selected"))
+            //    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
+            //        StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "Card,," + info.Split(' ')[0].Remove(0, 4) + ",,");
+            //else if (info.Contains("played"))
+            //    interactionLogger.AddRow(GetFixedTime() + "," + GetTrialNumber() + "," + GetTrialID() + "," +
+            //        StartSceneScript.ParticipantID + "," + GetFurnitureCondition() + "," + GetLayoutCondition() + "," + "DistractorTask,,,," + info.Split(' ')[0]);
+
         }
     }
 

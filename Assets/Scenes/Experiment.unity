@@ -317,10 +317,10 @@ MonoBehaviour:
   GameTask: {fileID: 4900000, guid: d97af0e7a0a7d414ab438ae212497150, type: 3}
   hDelta: 0.5
   vDelta: 0.3
-  cardSize: 0.3
+  cardSize: 0.25
   memoryTime: 15
   distractorTime: 15
-  eachDistractorReactTime: 3
+  eachDistractorReactTime: 5
   numberOfRows: 3
   numberOfColumns: 12
   layoutCon: 0
@@ -693,9 +693,49 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8856610075764168043, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610076017014153, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610076246592332, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610076560627522, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610077058389559, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610077058389559, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: debounceThreshold
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610077316487982, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
     - target: {fileID: 8856610077316487982, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
       propertyPath: debounceThreshold
       value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610077520306722, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610077545290240, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
+      objectReference: {fileID: 0}
+    - target: {fileID: 8856610077686492665, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}
+      propertyPath: localCenter.z
+      value: -0.030000009
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c4c4a5ff0aa2a99469fe40f8628f086d, type: 3}

@@ -35,7 +35,7 @@ public class InteractionLogger : MonoBehaviour
     #region Constants to modify
     private const string SessionFolderRoot = "SpatialMemory";
     private const string Header = "TimeSinceStart,TrialNo,TrialID,ParticipantID,FurnitureCondition,AlignmentCondition," +
-        "Info,CardSeen,CardSelected,CardAnswered,CardPlayed";
+        "Info,CardSeen,CardAnswered,CardPosition.x,CardPosition.y,CardPosition.z";
     #endregion
 
     #region private members

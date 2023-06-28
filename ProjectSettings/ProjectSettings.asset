@@ -146,8 +146,6 @@ PlayerSettings:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  - {fileID: -9182153983428062560, guid: c938eea92d7b09a4e8079a3cecaab5c3, type: 2}
-  - {fileID: 6769318348150240122, guid: 2d9daa2043f85464787a6b0cc2d00bfd, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -630,7 +628,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Spatial-Memory-Test-Package
-  metroPackageVersion: 1.0.120.0
+  metroPackageVersion: 1.0.123.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: Monash University
