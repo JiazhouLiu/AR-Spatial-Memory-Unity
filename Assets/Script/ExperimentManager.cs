@@ -7,7 +7,7 @@ using Microsoft.MixedReality.Toolkit;
 
 public class ExperimentManager : MonoBehaviour
 {
-    public static int trialNo;
+    public int trialNo;
 
     #region prefab and reference variables
     [Header("Resource")]
@@ -91,10 +91,10 @@ public class ExperimentManager : MonoBehaviour
     #endregion
 
     #region Log use variables
-    private float scanTime = 0;
-    private List<float> scanTimeLog;
-    private float selectTime = 0;
-    private List<float> selectTimeLog;
+    //private float scanTime = 0;
+    //private List<float> scanTimeLog;
+    //private float selectTime = 0;
+    //private List<float> selectTimeLog;
     private int accurateNumber = 0;
     private RawLogger rawLogger;
     private InteractionLogger interactionLogger;
@@ -121,8 +121,8 @@ public class ExperimentManager : MonoBehaviour
 
 
         // initialise time log
-        scanTimeLog = new List<float>();
-        selectTimeLog = new List<float>();
+        //scanTimeLog = new List<float>();
+        //selectTimeLog = new List<float>();
         #endregion
 
         // load pattern task
@@ -246,11 +246,11 @@ public class ExperimentManager : MonoBehaviour
             readyForDistractor = false;
             learningTimesUp = false;
 
-            scanTime = 0f;
-            selectTime = 0f;
+            //scanTime = 0f;
+            //selectTime = 0f;
 
-            scanTimeLog.Clear();
-            selectTimeLog.Clear();
+            //scanTimeLog.Clear();
+            //selectTimeLog.Clear();
 
             patternCards = GenerateCards();
 
@@ -400,6 +400,7 @@ public class ExperimentManager : MonoBehaviour
     // check all filled cards are scanned
     private void CheckCardsScanned()
     {
+
         allSeen = true;
         foreach (GameObject go in patternCards)
         {
@@ -412,7 +413,7 @@ public class ExperimentManager : MonoBehaviour
                     {
                         go.GetComponent<Card>().seen = true;
                         WriteInteractionToLog(go.name + " seen", VectorToString(go.transform.position));
-                        scanTimeLog.Add(scanTime);
+                        //scanTimeLog.Add(scanTime);
                         go.GetComponent<Card>().seenLogged = true;
                     }
                 }
@@ -694,9 +695,10 @@ public class ExperimentManager : MonoBehaviour
         {
             // Write patternCards log for accuracy
             WriteCardsLog();
-            // Write to Log
+            // Write accuracy to Log
             WriteAnswerToLog();
         }
+
         trialNo++;
 
         // flush raw log
@@ -789,7 +791,6 @@ public class ExperimentManager : MonoBehaviour
         taskLogger = StartSceneScript.TaskLogger;
         trialCardLogger = StartSceneScript.TrialCardLogger;
         answerCardLogger = StartSceneScript.AnswerCardLogger;
-
     }
 
     // write to log file
@@ -814,7 +815,7 @@ public class ExperimentManager : MonoBehaviour
         if (taskLogger != null && userSelectedPatternCards.Count != 0)
         {
             taskLogger.AddRow(StartSceneScript.ParticipantID + "," + GetTrialNumber() + "," + GetTrialID() + "," + GetFurnitureCondition() + "," +
-                GetLayoutCondition() + "," + GetAccuracy() + "," + GetSeenTime() + "," + GetSelectTime());
+                GetLayoutCondition() + "," + GetAccuracy());
             taskLogger.FlushData();
         }
     }
@@ -850,7 +851,7 @@ public class ExperimentManager : MonoBehaviour
 
             foreach (GameObject card in userSelectedPatternCards)
             {
-                final += card.name.Split(' ')[0].Remove(0, 4) + "," + VectorToString(card.transform.position);
+                final += card.name.Split(' ')[0].Remove(0, 4) + "," + VectorToString(card.transform.position) + ",";
             }
 
             final.Remove(final.Length - 1);
@@ -868,7 +869,7 @@ public class ExperimentManager : MonoBehaviour
                 int cardtmp = cardIndex;
                 GameObject cardGO = patternCards[cardIndex];
                 if (cardGO != null) {
-                    final += cardtmp + "," + VectorToString(cardGO.transform.position);
+                    final += cardtmp + "," + VectorToString(cardGO.transform.position) + ",";
                 }else 
                     final += cardtmp + ",";
             }
@@ -1210,21 +1211,21 @@ public class ExperimentManager : MonoBehaviour
         return accurateNumber + "";
     }
 
-    private string GetSeenTime()
-    {
-        return scanTimeLog[0] + "," + scanTimeLog[1] + "," + scanTimeLog[2] + "," + scanTimeLog[3] + "," + scanTimeLog[4];
-    }
+    //private string GetSeenTime()
+    //{
+    //    return scanTimeLog[0] + "," + scanTimeLog[1] + "," + scanTimeLog[2] + "," + scanTimeLog[3] + "," + scanTimeLog[4];
+    //}
 
-    private string GetSelectTime()
-    {
-        if (difficultyLevel == 2)
-            return selectTimeLog[0] + "," + selectTimeLog[1] + "," + "," + ",";
-        else if (difficultyLevel == 3)
-            return selectTimeLog[0] + "," + selectTimeLog[1] + "," + selectTimeLog[2] + "," + ",";
-        else if (difficultyLevel == 5)
-            return selectTimeLog[0] + "," + selectTimeLog[1] + "," + selectTimeLog[2] + "," + selectTimeLog[3] + "," + selectTimeLog[4];
-        return "";
-    }
+    //private string GetSelectTime()
+    //{
+    //    if (difficultyLevel == 2)
+    //        return selectTimeLog[0] + "," + selectTimeLog[1] + "," + "," + ",";
+    //    else if (difficultyLevel == 3)
+    //        return selectTimeLog[0] + "," + selectTimeLog[1] + "," + selectTimeLog[2] + "," + ",";
+    //    else if (difficultyLevel == 5)
+    //        return selectTimeLog[0] + "," + selectTimeLog[1] + "," + selectTimeLog[2] + "," + selectTimeLog[3] + "," + selectTimeLog[4];
+    //    return "";
+    //}
 
 
     string VectorToString(Vector3 v)
