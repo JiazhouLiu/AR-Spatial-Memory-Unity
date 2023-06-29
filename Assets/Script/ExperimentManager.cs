@@ -25,6 +25,8 @@ public class ExperimentManager : MonoBehaviour
     public GameObject nextButton;
     public GameObject wellDoneButton;
     public GameObject breakButton;
+    public GameObject readyButton;
+    public GameObject finishButton;
     public Transform WorldRig;
 
     [Header("Task File")]
@@ -46,6 +48,7 @@ public class ExperimentManager : MonoBehaviour
     public float memoryTime;
     public float distractorTime;
     public float eachDistractorReactTime;
+    public float ReactThreshold;
     public int numberOfRows;
     public int numberOfColumns;
 
@@ -175,11 +178,16 @@ public class ExperimentManager : MonoBehaviour
     {
         if (GameObject.Find("MainExperimentManager") != null)
         {
+            adjustedHeight = Camera.main.transform.position.y - 0.5f;
             // update calibrated position and rotation
-            if (GameObject.Find("##### World Rig #####") != null)
+            if (GameObject.Find("##### Environment #####") != null)
             {
-                WorldRig.position = GameObject.Find("##### World Rig #####").transform.position;
-                WorldRig.rotation = GameObject.Find("##### World Rig #####").transform.rotation;
+                WorldRig.position = GameObject.Find("##### Environment #####").transform.parent.position;
+                WorldRig.rotation = GameObject.Find("##### Environment #####").transform.parent.rotation;
+
+                DistractorTask.localPosition = new Vector3(0, 0, 0.5f);
+                DistractorTask.position = new Vector3(DistractorTask.position.x, adjustedHeight, DistractorTask.position.z);
+                DistractorTask.localEulerAngles = Vector3.zero;
             }
         }
 
@@ -571,23 +579,24 @@ public class ExperimentManager : MonoBehaviour
                     if (finishTouching)
                     {
                         finishTouching = false;
-
-                        if (touchingCard.name != currentGameNumber.ToString())
-                        {
-                            localDistractorTime += eachDistractorReactTime;
-                            if (localDistractorTime > 15)
-                                localDistractorTime = 15;
-                            GetNewDistractorTask();
-                            // play sound 
-                            AudioSource.PlayClipAtPoint(WrongAnswerAudio, DistractorTask.position);
-                        }
-                        else if (touchingCard.name == currentGameNumber.ToString())
-                        {
-                            // play sound 
-                            AudioSource.PlayClipAtPoint(CorrectAnswerAudio, DistractorTask.position);
-                            DistractorTaskInstruction.color = Color.white;
-                            localEachDistractorReactTime = eachDistractorReactTime;
-                            GetNewDistractorTask();
+                        if (eachDistractorReactTime - localEachDistractorReactTime > ReactThreshold) {
+                            if (touchingCard.name != currentGameNumber.ToString())
+                            {
+                                localDistractorTime += eachDistractorReactTime;
+                                if (localDistractorTime > 15)
+                                    localDistractorTime = 15;
+                                GetNewDistractorTask();
+                                // play sound 
+                                AudioSource.PlayClipAtPoint(WrongAnswerAudio, DistractorTask.position);
+                            }
+                            else if (touchingCard.name == currentGameNumber.ToString())
+                            {
+                                // play sound 
+                                AudioSource.PlayClipAtPoint(CorrectAnswerAudio, DistractorTask.position);
+                                DistractorTaskInstruction.color = Color.white;
+                                localEachDistractorReactTime = eachDistractorReactTime;
+                                GetNewDistractorTask();
+                            }
                         }
                     }
                 }
@@ -651,7 +660,8 @@ public class ExperimentManager : MonoBehaviour
         interactionLogger.FlushData();
 
         CheckResult();
-        Instruction.text = "Result: " + accurateNumber + " / " + difficultyLevel;
+        //Instruction.text = "Result: " + accurateNumber + " / " + difficultyLevel;
+        Instruction.text = "Well done!\nPlease get ready and proceed.";
 
         resultButton.SetActive(false);
         breakButton.SetActive(false);
@@ -662,33 +672,37 @@ public class ExperimentManager : MonoBehaviour
         { // break button activated
             breakButton.SetActive(true);
         }
+        else if (trialNo == 24) {
+            finishButton.SetActive(true);
+        }
         else
         {
-            if (difficultyLevel - accurateNumber <= 2) // well done button activated
-            {
-                wellDoneButton.SetActive(true);
-            }
-            else // next button activated
-            {
-                nextButton.SetActive(true);
-            }
+            //if (difficultyLevel - accurateNumber <= 2) // well done button activated
+            //{
+            //    wellDoneButton.SetActive(true);
+            //}
+            //else // next button activated
+            //{
+            //    nextButton.SetActive(true);
+            //}
+            nextButton.SetActive(true);
         }
 
-        // show correct cards and selected cards
-        foreach (GameObject card in patternCards)
-        {
-            SetCardsColor(card.transform, Color.black);
+        //// show correct cards and selected cards
+        //foreach (GameObject card in patternCards)
+        //{
+        //    SetCardsColor(card.transform, Color.black);
 
-            if (IsCardSelected(card))
-            {
-                card.transform.localEulerAngles += Vector3.up * 180;
-                SetCardsColor(card.transform, Color.white);
-            }
+        //    if (IsCardSelected(card))
+        //    {
+        //        card.transform.localEulerAngles += Vector3.up * 180;
+        //        SetCardsColor(card.transform, Color.white);
+        //    }
 
-            if (IsCardFilled(card))
-                SetCardsColor(card.transform, Color.white);
+        //    if (IsCardFilled(card))
+        //        SetCardsColor(card.transform, Color.white);
 
-        }
+        //}
 
         // increase trial No
         if (GetTrialID() != "Training")
@@ -704,9 +718,6 @@ public class ExperimentManager : MonoBehaviour
         // flush raw log
         FlushingRawLog();
         //gridCalibrate = false;
-
-        if (trialNo > maxTrialNo)
-            CloseAllWritersAndQuit();
     }
     #endregion
 
@@ -743,8 +754,9 @@ public class ExperimentManager : MonoBehaviour
     public void InitiateBreakPhase()
     {
         gameState = GameState.Break;
-        Instruction.text = "Please take off your headset and have a break. During the break, you will be asked to fill out a questionnaire." +
+        Instruction.text = "Break Time!\nPlease take off your headset and have a break. During the break, you will be asked to fill out a questionnaire." +
             "After the break, press the I'm Ready button to continue.";
+        readyButton.SetActive(true);
     }
     #endregion
 
@@ -881,7 +893,7 @@ public class ExperimentManager : MonoBehaviour
         }
     }
 
-    private void CloseAllWritersAndQuit()
+    public void CloseAllWritersAndQuit()
     {
         QuitGame();
     }

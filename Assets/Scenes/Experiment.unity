@@ -293,6 +293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91365c352b0b8f41a7fa60cee18d0aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trialNo: 0
   CardPrefab: {fileID: 5727101587611926129, guid: 2ce879b5c7feaf24397a4fb544429ab6, type: 3}
   TimesUp: {fileID: 8300000, guid: af03294447612544e96e620ea620323e, type: 3}
   WrongAnswerAudio: {fileID: 8300000, guid: ba0c80192a09e1546a1e4adf67230a2c, type: 3}
@@ -305,6 +306,8 @@ MonoBehaviour:
   nextButton: {fileID: 231753638}
   wellDoneButton: {fileID: 714643362}
   breakButton: {fileID: 1385050113}
+  readyButton: {fileID: 0}
+  finishButton: {fileID: 0}
   WorldRig: {fileID: 445313669}
   Patterns_Fur_Reg: {fileID: 4900000, guid: 43c606aafe55bd44d964ed33216792d8, type: 3}
   Patterns_Fur_Irr: {fileID: 4900000, guid: b3dad8131aebf924ea3f2c39117e9e94, type: 3}
@@ -321,6 +324,7 @@ MonoBehaviour:
   memoryTime: 15
   distractorTime: 15
   eachDistractorReactTime: 5
+  ReactThreshold: 1
   numberOfRows: 3
   numberOfColumns: 12
   layoutCon: 0
@@ -894,6 +898,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1920805785}
     m_Modifications:
+    - target: {fileID: 1348035319549798340, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1348035320036636234, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1348035321177710885, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 3932376135113705661, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
       propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
@@ -942,6 +958,22 @@ PrefabInstance:
       propertyPath: debounceThreshold
       value: 0.05
       objectReference: {fileID: 0}
+    - target: {fileID: 5895655907113080162, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5895655907323636761, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5895655907566290156, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5895655907738072976, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5895655907766606466, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
       propertyPath: m_Name
       value: HandMenu
@@ -989,6 +1021,26 @@ PrefabInstance:
     - target: {fileID: 5895655907766606494, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5895655908263590089, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5895655908359120414, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8500023636457064807, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 661852687}
+    - target: {fileID: 8500023636457064807, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: CloseAllWritersAndQuit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8500023636457064807, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}
+      propertyPath: OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: ExperimentManager, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4ba1b4215fce39042955bc7de17fc610, type: 3}

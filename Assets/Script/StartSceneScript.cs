@@ -80,8 +80,6 @@ public class StartSceneScript : MonoBehaviour
     private bool backActivated = false;
     #endregion
 
-    #region Calibration Variables
-    #endregion
 
     void Awake()
     {
@@ -279,17 +277,18 @@ public class StartSceneScript : MonoBehaviour
                 {
                     CheckResult();
 
-                    instruction.text = "This is the result phase. You will see the correct answers and the following message during the experiment.\n\n" +
-                        "Result: " + accurateNumber + " / " + 2;
+                    //instruction.text = "This is the result phase. You will see the correct answers and the following message during the experiment.\n\n" +
+                    //    "Result: " + accurateNumber + " / " + 2;
+                    instruction.text = "This is the rest phase. You can take a mini-rest from the current task.\n\n";
 
-                    // show correct cards and selected cards
-                    foreach (GameObject card in cardLists)
-                    {
-                        SetCardsColor(card.transform, Color.black);
+                    //// show correct cards and selected cards
+                    //foreach (GameObject card in cardLists)
+                    //{
+                    //    SetCardsColor(card.transform, Color.black);
 
-                        if (IsCardFilled(card))
-                            SetCardsColor(card.transform, Color.white);
-                    }
+                    //    if (IsCardFilled(card))
+                    //        SetCardsColor(card.transform, Color.white);
+                    //}
 
                     resultActivated = false;
                 }

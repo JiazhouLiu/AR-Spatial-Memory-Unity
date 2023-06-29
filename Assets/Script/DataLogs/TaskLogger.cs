@@ -35,8 +35,7 @@ public class TaskLogger : MonoBehaviour
     #region Constants to modify
     private const string SessionFolderRoot = "SpatialMemory";
     private const string Header = "ParticipantID,TrialNo,TrialID,FurnitureCondition,AlignmentCondition," +
-        "Difficulty,AnswerAccuracy,Card1SeenTime,Card2SeenTime,Card3SeenTime,Card4SeenTime,Card5SeenTime," +
-                "Card1SelectTime,Card2SelectTime,Card3SelectTime,Card4SelectTime,Card5SelectTime";
+        "AnswerAccuracy";
     #endregion
 
     #region private members
