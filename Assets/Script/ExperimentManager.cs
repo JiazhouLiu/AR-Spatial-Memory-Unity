@@ -142,6 +142,9 @@ public class ExperimentManager : MonoBehaviour
             {
                 WorldRig.position = GameObject.Find("##### World Rig #####").transform.position;
                 WorldRig.rotation = GameObject.Find("##### World Rig #####").transform.rotation;
+
+                adjustedHeight = Camera.main.transform.position.y - WorldRig.position.y - 0.3f;
+                WriteInteractionToLog("Adjusted Height: " + adjustedHeight, "");
             }
 
             // setup experimentSequence
@@ -155,13 +158,6 @@ public class ExperimentManager : MonoBehaviour
 
             // setup writer stream
             SetupLoggingSystem();
-
-            if (GameObject.Find("PreferableStand") != null)
-            {
-                // setup adjusted height
-                adjustedHeight = Camera.main.transform.position.y - 0.5f;
-                WriteInteractionToLog("Adjusted Height: " + adjustedHeight, "");
-            }
         }
 
         // setup timers
@@ -169,6 +165,10 @@ public class ExperimentManager : MonoBehaviour
         localDistractorTime = distractorTime;
         localEachDistractorReactTime = eachDistractorReactTime;
 
+        if (adjustedHeight == 0) {
+            adjustedHeight = 1.3f;
+            WriteInteractionToLog("Adjusted Height (hardcode): " + adjustedHeight, "");
+        }
         // setup experiment
         PrepareExperiment();
     }
@@ -176,21 +176,6 @@ public class ExperimentManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (GameObject.Find("MainExperimentManager") != null)
-        {
-            adjustedHeight = Camera.main.transform.position.y - 0.5f;
-            // update calibrated position and rotation
-            if (GameObject.Find("##### Environment #####") != null)
-            {
-                WorldRig.position = GameObject.Find("##### Environment #####").transform.parent.position;
-                WorldRig.rotation = GameObject.Find("##### Environment #####").transform.parent.rotation;
-
-                DistractorTask.localPosition = new Vector3(0, 0, 0.5f);
-                DistractorTask.position = new Vector3(DistractorTask.position.x, adjustedHeight, DistractorTask.position.z);
-                DistractorTask.localEulerAngles = Vector3.zero;
-            }
-        }
-
         if (gameState == GameState.Prepare)
             PreparePhaseCheck();
 
@@ -217,8 +202,7 @@ public class ExperimentManager : MonoBehaviour
 
         // adjust distractor task board position and rotation
 
-        DistractorTask.localPosition = new Vector3(0, 0, 0.5f);
-        DistractorTask.position = new Vector3(DistractorTask.position.x, adjustedHeight, DistractorTask.position.z);
+        DistractorTask.localPosition = new Vector3(0, adjustedHeight, 0.5f);
         DistractorTask.localEulerAngles = Vector3.zero;
 
         // change trial conditions based on trial number
@@ -661,7 +645,6 @@ public class ExperimentManager : MonoBehaviour
 
         CheckResult();
         //Instruction.text = "Result: " + accurateNumber + " / " + difficultyLevel;
-        Instruction.text = "Well done!\nPlease get ready and proceed.";
 
         resultButton.SetActive(false);
         breakButton.SetActive(false);
@@ -670,9 +653,11 @@ public class ExperimentManager : MonoBehaviour
         // button activation based on cases
         if (trialNo == 6 || trialNo == 12 || trialNo == 18)
         { // break button activated
+            Instruction.text = "Please press the button below and take a break.";
             breakButton.SetActive(true);
         }
         else if (trialNo == 24) {
+            Instruction.text = "That's all for the experiment. Thanks for your participation!";
             finishButton.SetActive(true);
         }
         else
@@ -685,6 +670,7 @@ public class ExperimentManager : MonoBehaviour
             //{
             //    nextButton.SetActive(true);
             //}
+            Instruction.text = "Well done!\nPlease get ready and proceed.";
             nextButton.SetActive(true);
         }
 
@@ -755,12 +741,20 @@ public class ExperimentManager : MonoBehaviour
     {
         gameState = GameState.Break;
         Instruction.text = "Break Time!\nPlease take off your headset and have a break. During the break, you will be asked to fill out a questionnaire." +
-            "After the break, press the I'm Ready button to continue.";
-        readyButton.SetActive(true);
+            "After the break, press (I'm Ready) button to continue.";
     }
     #endregion
 
     #region ##################################################
+    #endregion
+
+    #region Calibration
+    public void CalibrateWorldRig(Vector3 pos, Vector3 rot) {
+        WorldRig.position = pos;
+        WorldRig.eulerAngles = rot;
+
+        DistractorTask.localPosition = new Vector3(0, adjustedHeight, 0.5f);
+    }
     #endregion
 
     #region Task Related
@@ -866,7 +860,10 @@ public class ExperimentManager : MonoBehaviour
                 final += card.name.Split(' ')[0].Remove(0, 4) + "," + VectorToString(card.transform.position) + ",";
             }
 
-            final.Remove(final.Length - 1);
+            if(final[final.Length - 1] == ',')
+                final.Remove(final.Length - 1);
+            else if (final[final.Length - 2] == ',')
+                final.Remove(final.Length - 2);
 
             trialCardLogger.AddRow(final);
             trialCardLogger.FlushData();
@@ -886,7 +883,10 @@ public class ExperimentManager : MonoBehaviour
                     final += cardtmp + ",";
             }
 
-            final.Remove(final.Length - 1);
+            if (final[final.Length - 1] == ',')
+                final.Remove(final.Length - 1);
+            else if (final[final.Length - 2] == ',')
+                final.Remove(final.Length - 2);
 
             answerCardLogger.AddRow(final);
             answerCardLogger.FlushData();

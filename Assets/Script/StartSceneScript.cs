@@ -43,6 +43,7 @@ public class StartSceneScript : MonoBehaviour
     public Transform PhysicalQRCodeTopLeft;
     public QRCodesVisualizer qrVis;
     public AudioClip CorrectAnswerSoundEffect;
+    private ExperimentManager em;
     #endregion
 
     [Header("Experiment Parameter")]
@@ -122,12 +123,13 @@ public class StartSceneScript : MonoBehaviour
         if (QRCodesVisualizer.changeDetected)
             CalibrateWorldRig(QRCodesVisualizer.changeDirection);
 
-        if (SceneManager.GetActiveScene().name == "StartScene") {
+        if (SceneManager.GetActiveScene().name == "StartScene")
+        {
             // setup experiment/participant ID
             if (!finalConfirmed)
             {
                 if (!experimentNumberConfirmed)
-                    participantIDText = "Participant ID: " + ExperimentID + ".\n";
+                    participantIDText = participantIDText = "Participant ID: " + ExperimentID + ".\n";
                 else
                     participantIDText = "Participant ID: " + ExperimentID + " (Confirmed).\n";
 
@@ -140,7 +142,8 @@ public class StartSceneScript : MonoBehaviour
                     sp = SetupParameter.TrialNumber;
 
                 SetupText.text = participantIDText + trialIDText;
-            }else // All Confirmed
+            }
+            else // All Confirmed
             {
                 if (ExperimentID == 0)
                 { // testing stream
@@ -301,6 +304,11 @@ public class StartSceneScript : MonoBehaviour
                 #endregion
             }
         }
+        else {
+            if (em == null) {
+                em = GameObject.Find("ExperimentManager").GetComponent<ExperimentManager>();
+            }
+        }
     }
 
     #region Calibration Functions
@@ -360,6 +368,10 @@ public class StartSceneScript : MonoBehaviour
             WorldRig.eulerAngles += rotationDiff;
 
             WorldRig.eulerAngles = new Vector3(0, WorldRig.eulerAngles.y, 0);
+        }
+
+        if (em != null) {
+            em.CalibrateWorldRig(WorldRig.position, WorldRig.eulerAngles);
         }
 
         //if(calibratedTransform != null)

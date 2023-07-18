@@ -105,23 +105,23 @@ public class Card : MonoBehaviour
                         t.GetComponent<Image>().color = Color.white;
                 }
             }
-            else if (em.gameState == GameState.Result)
-            {
-                if (selected && filled)
-                {
-                    foreach (Transform t in borders)
-                        t.GetComponent<Image>().color = Color.green;
-                }
-                else if (!selected && filled)
-                {
-                    foreach (Transform t in borders)
-                        t.GetComponent<Image>().color = seenColor;
-                }
-                else if (selected && !filled) {
-                    foreach (Transform t in borders)
-                        t.GetComponent<Image>().color = touchedColor;
-                }
-            }
+            //else if (em.gameState == GameState.Result)
+            //{
+            //    if (selected && filled)
+            //    {
+            //        foreach (Transform t in borders)
+            //            t.GetComponent<Image>().color = Color.green;
+            //    }
+            //    else if (!selected && filled)
+            //    {
+            //        foreach (Transform t in borders)
+            //            t.GetComponent<Image>().color = seenColor;
+            //    }
+            //    else if (selected && !filled) {
+            //        foreach (Transform t in borders)
+            //            t.GetComponent<Image>().color = touchedColor;
+            //    }
+            //}
             //else {
             //    foreach (Transform t in borders)
             //        t.GetComponent<Image>().color = touchedColor;
